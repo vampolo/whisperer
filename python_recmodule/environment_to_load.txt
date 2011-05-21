@@ -1,0 +1,8 @@
+To make the shitty MCR work u have to do:
+
+
+export MCRBASE="/home/goshawk/MCR"
+export LD_LIBRARY_PATH="$MCRBASE/v715/runtime/glnxa64/:$MCRBASE/v715/sys/os/glnxa64:/home/goshawk/Projects/whisperer/python_recmodule/:$MCRBASE/v715/sys/java/jre/glnxa64/jre/lib/amd64/native_threads/:$MCRBASE/v715/sys/java/jre/glnxa64/jre/lib/amd64/server:$MCRBASE/v715/sys/java/jre/glnxa64/jre/lib/amd64"
+export XAPPLRESDIR="$MCRBASE/v715/X11/app-defaults/"
+
+change PATHs accordinly to your installation.

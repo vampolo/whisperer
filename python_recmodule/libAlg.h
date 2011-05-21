@@ -1,6 +1,6 @@
 /*
  * MATLAB Compiler: 4.15 (R2011a)
- * Date: Sat May 21 16:13:59 2011
+ * Date: Sat May 21 22:11:48 2011
  * Arguments: "-B" "macro_default" "-W" "lib:libAlg" "-T" "link:lib" "-d"
  * "/home/goshawk/Matlab/bin/libAlg/src" "-w" "enable:specified_file_mismatch"
  * "-w" "enable:repeated_file" "-w" "enable:switch_ignored" "-w"
@@ -31,6 +31,8 @@
  * el_random.m"
  * "/home/goshawk/Matlab/bin/RecSys/algorithms/non-personalized/topRated/createM
  * odel_toprated.m"
+ * "/home/goshawk/Matlab/bin/RecSys/algorithms/leonardo/flowLSA.m"
+ * "/home/goshawk/Matlab/bin/RecSys/algorithms/leonardo/full_flowLSA.m"
  * "/home/goshawk/Matlab/bin/RecSys/algorithms/collaborative/latentFactors/AsySV
  * D/learnFactorModelRabosio.m"
  * "/home/goshawk/Matlab/bin/RecSys/algorithms/content-based/normalizeICMwithIDF
@@ -189,6 +191,12 @@ bool MW_CALL_CONV mlxCreateModel_toprated(int nlhs, mxArray *plhs[], int nrhs, m
                                           *prhs[]);
 
 extern LIB_libAlg_C_API 
+bool MW_CALL_CONV mlxFlowLSA(int nlhs, mxArray *plhs[], int nrhs, mxArray *prhs[]);
+
+extern LIB_libAlg_C_API 
+bool MW_CALL_CONV mlxFull_flowLSA(int nlhs, mxArray *plhs[], int nrhs, mxArray *prhs[]);
+
+extern LIB_libAlg_C_API 
 bool MW_CALL_CONV mlxLearnFactorModelRabosio(int nlhs, mxArray *plhs[], int nrhs, mxArray 
                                              *prhs[]);
 
@@ -289,6 +297,10 @@ extern LIB_libAlg_C_API bool MW_CALL_CONV mlfCreateModel_pureSVD(int nargout, mx
 extern LIB_libAlg_C_API bool MW_CALL_CONV mlfCreateModel_random(int nargout, mxArray** model, mxArray* URM, mxArray* modelParam);
 
 extern LIB_libAlg_C_API bool MW_CALL_CONV mlfCreateModel_toprated(int nargout, mxArray** model, mxArray* URM, mxArray* modelParam);
+
+extern LIB_libAlg_C_API bool MW_CALL_CONV mlfFlowLSA(int nargout, mxArray** recList, mxArray* model, mxArray* urm, mxArray* icm, mxArray* userIndex);
+
+extern LIB_libAlg_C_API bool MW_CALL_CONV mlfFull_flowLSA(int nargout, mxArray** model, mxArray** recList, mxArray* urm, mxArray* icm, mxArray* userIndex);
 
 extern LIB_libAlg_C_API bool MW_CALL_CONV mlfLearnFactorModelRabosio(int nargout, mxArray** bu, mxArray** bi, mxArray** q, mxArray** x, mxArray** y, mxArray* urm, mxArray* mu, mxArray* bu_precomputed, mxArray* bi_precomputed, mxArray* bu_in1, mxArray* bi_in1, mxArray* iterations, mxArray* lrate, mxArray* lambda, mxArray* q_in1, mxArray* x_in1, mxArray* y_in1);
 
