@@ -26,11 +26,6 @@ static PyMethodDef RecMethods[] = {
 PyMODINIT_FUNC
 initrec(void)
 {
-	/*
-	 * when impoted this is executed
-	 */
-	(void) Py_InitModule("rec", RecMethods);
-	
     PyObject *m;
 
     m = Py_InitModule("rec", RecMethods);
