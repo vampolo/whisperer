@@ -12,13 +12,14 @@ from sqlalchemy import create_engine
 from sqlalchemy import Integer
 from sqlalchemy import Unicode
 from sqlalchemy import Column
+from sqlalchemy import TIMESTAMP
 
 from zope.sqlalchemy import ZopeTransactionExtension
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
-class MyModel(Base):
+""" class MyModel(Base):
     __tablename__ = 'models'
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(255), unique=True)
@@ -27,6 +28,49 @@ class MyModel(Base):
     def __init__(self, name, value):
         self.name = name
         self.value = value
+"""
+
+class URM(Base):
+	__tablename__ = 'urm'
+	id = Column(Integer, primary_key=True)
+	# put reference
+	userId = Column(Integer, ForeignKey('users.id'))
+	itemId = Column(Integer, ForeignKey('item.id'))
+
+	rating = Column(Integer)
+	dataSet = Column(Unicode(255))	
+	# timestamp = Column(TIMESTAMP)
+
+    def __init__(self, userId, itemId, rating, dataSet):
+        self.userId = userId
+        self.itemId = itemId
+	self.rating = rating
+	self.dataSet = dataSet
+
+class ICM(Base):
+	__tablename__ = 'icm'
+	id = Column(Integer, primary_key=True)
+
+	# put reference
+	itemId = Column(Integer, ForeignKey('item.id'))
+	metadataId = Column(Integer, ForeignKey('metadata.id'))	
+
+    def __init__(self, itemId, metadataId):
+        self.itemId = itemId
+        self.metadataId = metadataId
+
+class metadata(Base):
+	__tablename__ = 'metadata'
+	id = Column(Integer, primary_key=True)
+	metaName = Column(Unicode(255))
+	metaType = Column(Unicode(255))
+	metaLang = Column(Unicode(255))
+  
+
+    def __init__(self, metaName, metaType, metaLang):
+        self.metaName = metaName
+	self.metaType = metaType
+	self.metaLang = metaLang
 
 class MyApp(object):
     __name__ = None
@@ -66,19 +110,31 @@ root = MyApp()
 def default_get_root(request):
     return root
 
+"""
 def populate():
     session = DBSession()
     model = MyModel(name=u'test name', value=55)
     session.add(model)
     session.flush()
     transaction.commit()
+"""
+
+def populate():
+    session = DBSession()
+    #just a examp	
+    metadata1 = metadata(metadataId=1, metaName='Brad Pitt', metaType='actor', metaLang='eng')
+    session.add(metadata1)
+
+    session.flush()
+    transaction.commit()
+
 
 def initialize_sql(engine):
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
     Base.metadata.create_all(engine)
     try:
-        populate()
+	populate()
     except IntegrityError:
         DBSession.rollback()
 
