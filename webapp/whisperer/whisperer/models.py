@@ -9,10 +9,9 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 
 from sqlalchemy import create_engine
-from sqlalchemy import Integer
-from sqlalchemy import Unicode
+from sqlalchemy import Integer, String, Unicode
 from sqlalchemy import Column
-from sqlalchemy import TIMESTAMP
+from sqlalchemy import TIMESTAMP, ForeignKey
 
 from zope.sqlalchemy import ZopeTransactionExtension
 
@@ -30,16 +29,18 @@ Base = declarative_base()
         self.value = value
 """
 
-class URM(Base):
+class URMrow(Base):
 	__tablename__ = 'urm'
-	id = Column(Integer, primary_key=True)
+	#id = Column(Integer, primary_key=True)
 	# put reference
-	userId = Column(Integer, ForeignKey('users.id'))
+	userId = Column(Integer, ForeignKey('user.id'))
 	itemId = Column(Integer, ForeignKey('item.id'))
 
 	rating = Column(Integer)
 	dataSet = Column(Unicode(255))	
 	# timestamp = Column(TIMESTAMP)
+	# timestamp = Column(DateTime)
+
 
     def __init__(self, userId, itemId, rating, dataSet):
         self.userId = userId
@@ -47,9 +48,9 @@ class URM(Base):
 	self.rating = rating
 	self.dataSet = dataSet
 
-class ICM(Base):
+class ICMrow(Base):
 	__tablename__ = 'icm'
-	id = Column(Integer, primary_key=True)
+	#id = Column(Integer, primary_key=True)
 
 	# put reference
 	itemId = Column(Integer, ForeignKey('item.id'))
@@ -59,13 +60,39 @@ class ICM(Base):
         self.itemId = itemId
         self.metadataId = metadataId
 
+class user(Base)
+	__tablename__ = 'user'
+	id = Column(Integer, primary_key=True)
+	username = Column(Unicode(255), unique=True)
+
+	# is relationship right?!
+	ratings = relationship("URMrow", backref="user")
+
+    def __init__(self, username):
+	self.username = username
+
+class item(Base)
+	__tablename__ = 'item'
+	id = Column(Integer, primary_key=True)
+	itemName = Column(Unicode(255), unique=True)
+	
+	# is relationship right?!
+	ratings = relationship("URMrow", backref="item")
+	itemContent = relationship("ICMrow", backref="item")
+
+   def __init__(self, itemName)
+	self.itemName = itemName
+
 class metadata(Base):
 	__tablename__ = 'metadata'
 	id = Column(Integer, primary_key=True)
-	metaName = Column(Unicode(255))
+	metaName = Column(Unicode(255), unique=True)
 	metaType = Column(Unicode(255))
 	metaLang = Column(Unicode(255))
   
+	# is relationship right?!
+	itemContent = relationship("ICMrow", backref="metadata")
+
 
     def __init__(self, metaName, metaType, metaLang):
         self.metaName = metaName
@@ -121,10 +148,14 @@ def populate():
 
 def populate():
     session = DBSession()
-    #just a examp	
-    metadata1 = metadata(metadataId=1, metaName='Brad Pitt', metaType='actor', metaLang='eng')
-    session.add(metadata1)
-
+    #just a examp
+    user1 = user(username='John')
+    item1 = item(itemName='Inglourious Bastards')	
+    metadata1 = metadata(metaName='Brad Pitt', metaType='actor', metaLang='eng')
+    #session.save(user1,item1,metadata1)
+    urmTest = URMrow(userId=user1.id, itemId=item1.id, rating=5, dataSet='NetFlix')
+    icmTest = ICMrow(itemId=item1.id, metadataId=metadata1.id)
+    session.add(metadata1, user1, item1, urmTest, icmTest)
     session.flush()
     transaction.commit()
 
