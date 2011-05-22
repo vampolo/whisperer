@@ -2,6 +2,7 @@ import transaction
 
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import relationship, backref
 
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -18,20 +19,11 @@ from zope.sqlalchemy import ZopeTransactionExtension
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
-""" class MyModel(Base):
-    __tablename__ = 'models'
-    id = Column(Integer, primary_key=True)
-    name = Column(Unicode(255), unique=True)
-    value = Column(Integer)
 
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
-"""
 
 class URMrow(Base):
 	__tablename__ = 'urm'
-	#id = Column(Integer, primary_key=True)
+	id = Column(Integer, primary_key=True)
 	# put reference
 	userId = Column(Integer, ForeignKey('user.id'))
 	itemId = Column(Integer, ForeignKey('item.id'))
@@ -42,25 +34,25 @@ class URMrow(Base):
 	# timestamp = Column(DateTime)
 
 
-    def __init__(self, userId, itemId, rating, dataSet):
-        self.userId = userId
-        self.itemId = itemId
-	self.rating = rating
-	self.dataSet = dataSet
+    	def __init__(self, userId, itemId, rating, dataSet):
+        	self.userId = userId
+	        self.itemId = itemId
+		self.rating = rating
+		self.dataSet = dataSet
 
 class ICMrow(Base):
 	__tablename__ = 'icm'
-	#id = Column(Integer, primary_key=True)
+	id = Column(Integer, primary_key=True)
 
 	# put reference
 	itemId = Column(Integer, ForeignKey('item.id'))
 	metadataId = Column(Integer, ForeignKey('metadata.id'))	
+	
+	def __init__(self, itemId, metadataId):
+        	self.itemId = itemId
+	        self.metadataId = metadataId
 
-    def __init__(self, itemId, metadataId):
-        self.itemId = itemId
-        self.metadataId = metadataId
-
-class user(Base)
+class user(Base):
 	__tablename__ = 'user'
 	id = Column(Integer, primary_key=True)
 	username = Column(Unicode(255), unique=True)
@@ -68,10 +60,10 @@ class user(Base)
 	# is relationship right?!
 	ratings = relationship("URMrow", backref="user")
 
-    def __init__(self, username):
-	self.username = username
+	def __init__(self, username):
+		self.username = username
 
-class item(Base)
+class item(Base):
 	__tablename__ = 'item'
 	id = Column(Integer, primary_key=True)
 	itemName = Column(Unicode(255), unique=True)
@@ -80,8 +72,8 @@ class item(Base)
 	ratings = relationship("URMrow", backref="item")
 	itemContent = relationship("ICMrow", backref="item")
 
-   def __init__(self, itemName)
-	self.itemName = itemName
+	def __init__(self, itemName):
+		self.itemName = itemName
 
 class metadata(Base):
 	__tablename__ = 'metadata'
@@ -94,10 +86,21 @@ class metadata(Base):
 	itemContent = relationship("ICMrow", backref="metadata")
 
 
-    def __init__(self, metaName, metaType, metaLang):
-        self.metaName = metaName
-	self.metaType = metaType
-	self.metaLang = metaLang
+	def __init__(self, metaName, metaType, metaLang):
+		self.metaName = metaName
+		self.metaType = metaType
+		self.metaLang = metaLang
+
+class MyModel(Base):
+    __tablename__ = 'models'
+    id = Column(Integer, primary_key=True)
+    name = Column(Unicode(255), unique=True)
+    value = Column(Integer)
+
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
 
 class MyApp(object):
     __name__ = None
@@ -137,16 +140,15 @@ root = MyApp()
 def default_get_root(request):
     return root
 
-"""
 def populate():
     session = DBSession()
     model = MyModel(name=u'test name', value=55)
     session.add(model)
     session.flush()
     transaction.commit()
-"""
 
-def populate():
+
+def testing():
     session = DBSession()
     #just a examp
     user1 = user(username='John')
@@ -155,7 +157,7 @@ def populate():
     #session.save(user1,item1,metadata1)
     urmTest = URMrow(userId=user1.id, itemId=item1.id, rating=5, dataSet='NetFlix')
     icmTest = ICMrow(itemId=item1.id, metadataId=metadata1.id)
-    session.add(metadata1, user1, item1, urmTest, icmTest)
+    session.add(icmTest)
     session.flush()
     transaction.commit()
 
@@ -165,7 +167,7 @@ def initialize_sql(engine):
     Base.metadata.bind = engine
     Base.metadata.create_all(engine)
     try:
-	populate()
+	testing()
     except IntegrityError:
         DBSession.rollback()
 
