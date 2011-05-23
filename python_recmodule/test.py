@@ -7,4 +7,6 @@ a=arange(10).reshape(2,5)
 
 print a
 
-rec.full_flowLSA([(1,1,1)], [(1,1,1)], 1)
+rec.hello()
+
+#rec.full_flowLSA([(1,1,1)], [(1,1,1)], 1)

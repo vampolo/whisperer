@@ -1,10 +1,11 @@
 /*
  * MATLAB Compiler: 4.15 (R2011a)
- * Date: Sat May 21 22:11:48 2011
+ * Date: Mon May 23 12:01:52 2011
  * Arguments: "-B" "macro_default" "-W" "lib:libAlg" "-T" "link:lib" "-d"
  * "/home/goshawk/Matlab/bin/libAlg/src" "-w" "enable:specified_file_mismatch"
  * "-w" "enable:repeated_file" "-w" "enable:switch_ignored" "-w"
  * "enable:missing_lib_sentinel" "-w" "enable:demo_license" "-v"
+ * "/home/goshawk/Matlab/bin/RecSys/algorithms/leonardo/addmatrix.m"
  * "/home/goshawk/Matlab/bin/RecSys/algorithms/collaborative/neighborhoodBased/I
  * temItem_pearsonKoren/computePearsonSimilarity.m"
  * "/home/goshawk/Matlab/bin/RecSys/algorithms/collaborative/latentFactors/AsySV
@@ -33,6 +34,7 @@
  * odel_toprated.m"
  * "/home/goshawk/Matlab/bin/RecSys/algorithms/leonardo/flowLSA.m"
  * "/home/goshawk/Matlab/bin/RecSys/algorithms/leonardo/full_flowLSA.m"
+ * "/home/goshawk/Matlab/bin/RecSys/algorithms/leonardo/hello.m"
  * "/home/goshawk/Matlab/bin/RecSys/algorithms/collaborative/latentFactors/AsySV
  * D/learnFactorModelRabosio.m"
  * "/home/goshawk/Matlab/bin/RecSys/algorithms/content-based/normalizeICMwithIDF
@@ -139,6 +141,9 @@ extern LIB_libAlg_C_API
 void MW_CALL_CONV libAlgPrintStackTrace(void);
 
 extern LIB_libAlg_C_API 
+bool MW_CALL_CONV mlxAddmatrix(int nlhs, mxArray *plhs[], int nrhs, mxArray *prhs[]);
+
+extern LIB_libAlg_C_API 
 bool MW_CALL_CONV mlxComputePearsonSimilarity(int nlhs, mxArray *plhs[], int nrhs, 
                                               mxArray *prhs[]);
 
@@ -195,6 +200,9 @@ bool MW_CALL_CONV mlxFlowLSA(int nlhs, mxArray *plhs[], int nrhs, mxArray *prhs[
 
 extern LIB_libAlg_C_API 
 bool MW_CALL_CONV mlxFull_flowLSA(int nlhs, mxArray *plhs[], int nrhs, mxArray *prhs[]);
+
+extern LIB_libAlg_C_API 
+bool MW_CALL_CONV mlxHello(int nlhs, mxArray *plhs[], int nrhs, mxArray *prhs[]);
 
 extern LIB_libAlg_C_API 
 bool MW_CALL_CONV mlxLearnFactorModelRabosio(int nlhs, mxArray *plhs[], int nrhs, mxArray 
@@ -272,6 +280,8 @@ long MW_CALL_CONV libAlgGetMcrID();
 
 
 
+extern LIB_libAlg_C_API bool MW_CALL_CONV mlfAddmatrix(int nargout, mxArray** a, mxArray* a1, mxArray* a2);
+
 extern LIB_libAlg_C_API bool MW_CALL_CONV mlfComputePearsonSimilarity(int nargout, mxArray** II, mxArray* URM, mxArray* knn, mxArray* lambdaS, mxArray* Cdisabled);
 
 extern LIB_libAlg_C_API bool MW_CALL_CONV mlfCreateModel_AsySVD(int nargout, mxArray** model, mxArray* URM, mxArray* param);
@@ -301,6 +311,8 @@ extern LIB_libAlg_C_API bool MW_CALL_CONV mlfCreateModel_toprated(int nargout, m
 extern LIB_libAlg_C_API bool MW_CALL_CONV mlfFlowLSA(int nargout, mxArray** recList, mxArray* model, mxArray* urm, mxArray* icm, mxArray* userIndex);
 
 extern LIB_libAlg_C_API bool MW_CALL_CONV mlfFull_flowLSA(int nargout, mxArray** model, mxArray** recList, mxArray* urm, mxArray* icm, mxArray* userIndex);
+
+extern LIB_libAlg_C_API bool MW_CALL_CONV mlfHello();
 
 extern LIB_libAlg_C_API bool MW_CALL_CONV mlfLearnFactorModelRabosio(int nargout, mxArray** bu, mxArray** bi, mxArray** q, mxArray** x, mxArray** y, mxArray* urm, mxArray* mu, mxArray* bu_precomputed, mxArray* bi_precomputed, mxArray* bu_in1, mxArray* bi_in1, mxArray* iterations, mxArray* lrate, mxArray* lambda, mxArray* q_in1, mxArray* x_in1, mxArray* y_in1);
 
