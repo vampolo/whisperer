@@ -19,8 +19,6 @@ from zope.sqlalchemy import ZopeTransactionExtension
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
-
-
 class URMrow(Base):
 	__tablename__ = 'urm'
 	id = Column(Integer, primary_key=True)
@@ -47,7 +45,7 @@ class ICMrow(Base):
 	# put reference
 	itemId = Column(Integer, ForeignKey('item.id'))
 	metadataId = Column(Integer, ForeignKey('metadata.id'))	
-	
+
 	def __init__(self, itemId, metadataId):
         	self.itemId = itemId
 	        self.metadataId = metadataId
@@ -67,7 +65,7 @@ class item(Base):
 	__tablename__ = 'item'
 	id = Column(Integer, primary_key=True)
 	itemName = Column(Unicode(255), unique=True)
-	
+
 	# is relationship right?!
 	ratings = relationship("URMrow", backref="item")
 	itemContent = relationship("ICMrow", backref="item")
@@ -140,37 +138,26 @@ root = MyApp()
 def default_get_root(request):
     return root
 
-def populate():
-    session = DBSession()
-    model = MyModel(name=u'test name', value=55)
-    session.add(model)
-    session.flush()
-    transaction.commit()
-
-
-def testing():
-    session = DBSession()
-    #just a examp
-    user1 = user(username='John')
-    item1 = item(itemName='Inglourious Bastards')	
-    metadata1 = metadata(metaName='Brad Pitt', metaType='actor', metaLang='eng')
-    #session.save(user1,item1,metadata1)
-    urmTest = URMrow(userId=user1.id, itemId=item1.id, rating=5, dataSet='NetFlix')
-    icmTest = ICMrow(itemId=item1.id, metadataId=metadata1.id)
-    session.add(icmTest)
-    session.flush()
-    transaction.commit()
-
-
 def initialize_sql(engine):
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
     Base.metadata.create_all(engine)
     try:
-	testing()
+	session = DBSession()
+    	model = MyModel(name=u'test name', value=55)
+	#user1 = user(username='John')
+    	#item1 = item(itemName='Inglourious Bastards')	
+    	#metadata1 = metadata(metaName='Brad Pitt', metaType='actor', metaLang='eng')
+	#urmTest = URMrow(userId=user1.id, itemId=item1.id, rating=5, dataSet='NetFlix')
+    	#icmTest = ICMrow(itemId=item1.id, metadataId=metadata1.id)
+	#session.add_all(user1, item1, metadata1, urmTest, icmTest)    	    	
+	session.add(model)	
+	session.flush()
+    	transaction.commit()
     except IntegrityError:
         DBSession.rollback()
 
 def appmaker(engine):
     initialize_sql(engine)
     return default_get_root
+"""

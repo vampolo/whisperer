@@ -836,18 +836,15 @@ static PyObject * full_flowLSA(PyObject *self, PyObject *args){
 	if (!PyArg_ParseTuple(args, "OOO", &py_urm, &py_icm, &user_id))
         return NULL;
     
-    /*
-    urm = mx_from_py(py_urm);
-    printf("value of urm: %s", mxArrayToString(urm));
-    icm = mx_from_py(py_icm);
-    printf("value of icm: %s", mxArrayToString(icm));
-    userIndex = mx_from_py(user_id);
-    printf("value of userIndex: %s", mxArrayToString(userIndex));
-    mlfFull_flowLSA(2, model, recList, urm, icm, userIndex);
-    */
     
-    
-    printf("HERE AFTER\n");
+    //urm = mx_from_py(py_urm);
+    //printf("value of urm: %s", mxArrayToString(urm));
+    //icm = mx_from_py(py_icm);
+    //printf("value of icm: %s", mxArrayToString(icm));
+    //userIndex = mx_from_py(user_id);
+    //printf("value of userIndex: %s", mxArrayToString(userIndex));
+    //mlfFull_flowLSA(2, model, recList, urm, icm, userIndex);
+   
 	Py_INCREF(Py_None);
 	return Py_None; 
 }
@@ -855,11 +852,24 @@ static PyObject * full_flowLSA(PyObject *self, PyObject *args){
 static PyObject *hello(PyObject *self, PyObject *args){
 	mlfHello();
 	
+	mxArray *a1, *a, *a2;
+	PyObject *py_a1, *py_a2;
+	
+	if (!PyArg_ParseTuple(args, "OO", &py_a1, &py_a2))
+        return NULL;
 	
 	
+	a1 = mx_from_py(py_a1);
+	printf("value of urm: %s", mxArrayToString(a1));
+	a2 = mx_from_py(py_a2);
+	printf("value of urm: %s", mxArrayToString(a2));
+	mlfAddmatrix(1, a, a1, a2);	
+	printf("value of urm: %s", mxArrayToString(a));
+
 	Py_INCREF(Py_None);
 	return Py_None;
 }
+
 static PyMethodDef RecMethods[] = {
     {"full_flowLSA",  full_flowLSA, METH_VARARGS, "flowLSA model creation"},
     {"hello", hello, METH_VARARGS, "hello world function" },

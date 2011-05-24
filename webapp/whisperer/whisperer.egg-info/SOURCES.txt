@@ -7,6 +7,7 @@ setup.cfg
 setup.py
 whisperer/__init__.py
 whisperer/models.py
+whisperer/test.py
 whisperer/views.py
 whisperer.egg-info/PKG-INFO
 whisperer.egg-info/SOURCES.txt
