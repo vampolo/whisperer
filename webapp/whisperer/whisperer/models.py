@@ -19,15 +19,13 @@ from zope.sqlalchemy import ZopeTransactionExtension
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
-class URMrow(Base):
-	__tablename__ = 'urm'
+class URMcell(Base):
+	__tablename__ = 'URM'
 	id = Column(Integer, primary_key=True)
 	# put reference
-	userId = Column(Integer, ForeignKey('user.id'))
-	itemId = Column(Integer, ForeignKey('item.id'))
-
+	userId = Column(Integer, ForeignKey('User.id'))
+	itemId = Column(Integer, ForeignKey('Item.id'))
 	rating = Column(Integer)
-	dataSet = Column(Unicode(255))	
 	# timestamp = Column(TIMESTAMP)
 	# timestamp = Column(DateTime)
 
@@ -38,50 +36,51 @@ class URMrow(Base):
 		self.rating = rating
 		self.dataSet = dataSet
 
-class ICMrow(Base):
-	__tablename__ = 'icm'
+class ICMcell(Base):
+	__tablename__ = 'ICM'
 	id = Column(Integer, primary_key=True)
 
 	# put reference
-	itemId = Column(Integer, ForeignKey('item.id'))
-	metadataId = Column(Integer, ForeignKey('metadata.id'))	
+	itemId = Column(Integer, ForeignKey('Item.id'))
+	metadataId = Column(Integer, ForeignKey('Metadata.id'))	
 
 	def __init__(self, itemId, metadataId):
         	self.itemId = itemId
 	        self.metadataId = metadataId
 
-class user(Base):
-	__tablename__ = 'user'
+class User(Base):
+	__tablename__ = 'User'
 	id = Column(Integer, primary_key=True)
 	username = Column(Unicode(255), unique=True)
 
 	# is relationship right?!
-	ratings = relationship("URMrow", backref="user")
+	ratings = relationship("URMcell", backref="User")
 
 	def __init__(self, username):
 		self.username = username
 
-class item(Base):
-	__tablename__ = 'item'
+class Item(Base):
+	__tablename__ = 'Item'
 	id = Column(Integer, primary_key=True)
 	itemName = Column(Unicode(255), unique=True)
+	dataSet = Column(Unicode(255))
 
 	# is relationship right?!
-	ratings = relationship("URMrow", backref="item")
-	itemContent = relationship("ICMrow", backref="item")
+	ratings = relationship("URMcell", backref="Item")
+	itemContent = relationship("ICMcell", backref="Item")
 
 	def __init__(self, itemName):
 		self.itemName = itemName
 
-class metadata(Base):
-	__tablename__ = 'metadata'
+class Metadata(Base):
+	__tablename__ = 'Metadata'
 	id = Column(Integer, primary_key=True)
 	metaName = Column(Unicode(255), unique=True)
 	metaType = Column(Unicode(255))
 	metaLang = Column(Unicode(255))
   
 	# is relationship right?!
-	itemContent = relationship("ICMrow", backref="metadata")
+	itemContent = relationship("ICMcell", backref="Metadata")
 
 
 	def __init__(self, metaName, metaType, metaLang):
@@ -146,10 +145,10 @@ def initialize_sql(engine):
 	session = DBSession()
     	model = MyModel(name=u'test name', value=55)
 	#user1 = user(username='John')
-    	#item1 = item(itemName='Inglourious Bastards')	
+    	#item1 = item(itemName='Inglourious Bastards', dataSet='NetFlix')	
     	#metadata1 = metadata(metaName='Brad Pitt', metaType='actor', metaLang='eng')
-	#urmTest = URMrow(userId=user1.id, itemId=item1.id, rating=5, dataSet='NetFlix')
-    	#icmTest = ICMrow(itemId=item1.id, metadataId=metadata1.id)
+	#urmTest = URMcell(userId=user1.id, itemId=item1.id, rating=5)
+    	#icmTest = ICMcell(itemId=item1.id, metadataId=metadata1.id)
 	#session.add_all(user1, item1, metadata1, urmTest, icmTest)    	    	
 	session.add(model)	
 	session.flush()
@@ -160,4 +159,4 @@ def initialize_sql(engine):
 def appmaker(engine):
     initialize_sql(engine)
     return default_get_root
-"""
+

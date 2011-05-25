@@ -10,7 +10,6 @@ def main(global_config, **settings):
     	get_root = appmaker(engine)
     	config = Configurator(settings=settings, root_factory=get_root)
     	config.add_static_view('static', 'whisperer:static')
-    
 	config.add_view('whisperer.views.view_root', 
                     context='whisperer.models.MyApp', 
                     renderer="templates/root.pt")

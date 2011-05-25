@@ -44,4 +44,3 @@ setup(name='whisperer',
       """,
       paster_plugins=['pyramid'],
       )
-
