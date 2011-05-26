@@ -1,14 +1,21 @@
-import sys
-sys.path.append('build/lib.linux-x86_64-2.7')
 from numpy import *
-import rec
+from pymatlab.matlab import MatlabSession
 
-a=arange(10).reshape(2,5)
+# export LD_LIBRARY_PATH=/home/goshawk/Matlab/bin/glnxa64:$LD_LIBRARY_PATH
 
-print a
+s = MatlabSession('matlab -nosplash -nodisplay')
 
-#rec.hello()
+s.run('''addpath(genpath('/home/goshawk/Desktop/recSys'))''')
 
-rec.hello([(1,1,1)], [(1,1,1)])
+s.run("load('/home/goshawk/Desktop/recSys/dataset/icm.mat')")
+s.run("load('/home/goshawk/Desktop/recSys/dataset/urmTraining.mat')")
 
-#rec.full_flowLSA([(1,1,1)], [(1,1,1)], 1)
+s.run("[model, recList] = full_flowLSA(urmTraining, icm, 5)")
+
+print s.getvalue('recList')
+
+s.run("recList1 = flowLSA(model, urmTraining, icm, 184)")
+
+print s.getvalue('recList1')
+
+s.close()

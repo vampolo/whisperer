@@ -2,7 +2,7 @@ from pyramid.view import view_config
 #get all classes from the models to be used
 from models import *
 
-@view_config(name='addUser', context='whisperer:models.User',
+@view_config(name='addUser', context='whisperer.models.MyApp',
              renderer='json')
 def add_user(request):
 	username = request.GET.get('username')
