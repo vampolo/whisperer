@@ -9,23 +9,18 @@ def add_user(request):
 	if not username:
 		return dict()	
 	session = DBSession()
-	#if was in a form in a .pt context, for example: if 'form.submitted' in request.params: 
-	#username = request.params['username']
-	user_added = User(username)
-	session.add(user_added)
-	#necessary?
-	session.commit()
-	added_row = session.query(User).filter(User.id.in_([user_added.id])).all()
-	return dict(added_user = added_row)        
-
-@view_config(name='addItem', context='whisperer:models.Item',
-             renderer='json')
-@view_config(name='addMetadataValue', context='whisperer:models.Metadata',
-             renderer='json')
-@view_config(name='addItemMetadata', context='whisperer:models.ICMcell',
+	if not session.query(User).filter(User.username.in_([username])).all():
+		user_added = User(username)
+		session.add(user_added)
+		session.flush()
+		transaction.commit()
+		added_obj = session.query(User).filter(User.username.in_([username])).first()
+		return dict(added_user_id = str(added_obj.id), added_user_name = str(added_obj.username))        
+	return dict(message = 'Username already used, please insert another')
+	
+@view_config(name='addItem', context='whisperer.models.MyApp',
              renderer='json')
 def add_completeItem(request):
-	#booo... this is how i Should get?
 	item_name = request.GET.get('item_name')
 	metadata_name = request.GET.get('metadata_name')
 	metadata_type = request.GET.get('metadata_type')
@@ -33,39 +28,51 @@ def add_completeItem(request):
 	dataSet = request.GET.get('dataSet')
 	if not item_name:
 		return dict()
-	#Adding in session like in docs.pylonsproject.org/projects/pyramid/dev/tutorials/wiki2/definingviews.html
 	session = DBSession()
-	item_added = Item(item_name, dataSet)
-	metadata_added = Metadata(metadata_name, metadata_type, metadata_lang)
-	session.add_all(item_added, metadata_added)
-	#necessary to use the objects on the ICM?	
-	session.commit()
-	#session = DBSession()	
-	ICMcell_added = ICMcell(item_added.id, metada_added.id)
-	session.add(ICMcell_added)
-	session.commit()	
-	added_row = session.query(ICMcell).filter(ICMcell.id.in_([ICMcell_added.id])).all()
-	return dict(ICMcell_added = added_row)        
+	if not session.query(Item).filter(Item.itemName.in_([item_name])).all():			
+		metadata_added = Metadata(metadata_name, metadata_type, metadata_lang)
+		item_added = Item(item_name, dataSet)
+		session.add(item_added)
+		session.add(metadata_added)
+		session.flush()
+		transaction.commit()
+		#get objects to use in ICM
+		added_item_obj = session.query(Item).filter(Item.itemName.in_([item_name])).first()
+		added_metadata_obj = session.query(Metadata).filter(Metadata.metaName.in_([metadata_name])).first()	
+		#Adds in ICM
+		ICMcell_added = ICMcell(added_item_obj.id, added_metadata_obj.id)
+		session.add(ICMcell_added)
+		session.flush()
+		transaction.commit()
+		#I must get everything again to use it!		
+		added_item_obj = session.query(Item).filter(Item.itemName.in_([item_name])).first()
+		added_metadata_obj = session.query(Metadata).filter(Metadata.metaName.in_([metadata_name])).first()	
+		added_cell_obj = session.query(ICMcell).filter(ICMcell.itemId.in_([added_item_obj.id])).first()	
+		#added_row = session.query(ICMcell).filter(ICMcell.id.in_([ICMcell_added.id])).all()
+		return dict(ICMcell_added_item = str(added_cell_obj.itemId), 
+		ICMcell_added_metadata = str(added_cell_obj.metadataId), added_item = str(added_item_obj.itemName), 
+		added_metadata = str(added_metadata_obj.metaName))                			
+	return dict(message = 'Item already exists, please insert another')	
 
 
-#should act just as above...
-@view_config(name='addRating', context='whisperer:models.URMcell',
+@view_config(name='addRating', context='whisperer.models.MyApp',
              renderer='json')
 def add_rating(request):
-	#booo... this is how i Should get?
 	userID = request.GET.get('user')
 	itemID = request.GET.get('item')
 	rating = request.GET.get('rating')
 	if not rating:
 		return dict()
-	#Adding in session like in docs.pylonsproject.org/projects/pyramid/dev/tutorials/wiki2/definingviews.html
 	session = DBSession()
 	URMcell_added = URMcell(userID, itemID, rating)
 	session.add(URMcell_added)
-	session.commit()	
-	added_row = session.query(URMcell).filter(URMcell.id.in_([URMcell_added.id])).all()
-	return dict(URMcell_added = added_row)        
-
+	session.flush()
+	transaction.commit()
+	#To retrieve the last,  we must get all the list the get the last element
+	added_cells_list = session.query(URMcell).filter(URMcell.itemId.in_([itemID])).all()
+	added_cell_obj = added_cells_list[-1]		
+	return dict(URMcell_added_user = str(added_cell_obj.userId), URMcell_added_item = str(added_cell_obj.itemId), 
+		rating = str(rating))           
 
 @view_config(name='getRecommendation', context='whisperer:models.User',
              renderer='json')            
@@ -79,18 +86,3 @@ def get_Recommendation(request):
 
 
 
-
-""" 
-def add_page(request):
-    name = request.matchdict['pagename']
-    if 'form.submitted' in request.params:
-        session = DBSession()
-        body = request.params['body']
-        page = Page(name, body)
-        session.add(page)
-        return HTTPFound(location = route_url('view_page', request,
-                                              pagename=name))
-    save_url = route_url('add_page', request, pagename=name)
-    page = Page('', '')
-    return dict(page=page, save_url=save_url)
-"""

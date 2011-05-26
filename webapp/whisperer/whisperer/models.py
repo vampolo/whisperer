@@ -30,11 +30,10 @@ class URMcell(Base):
 	# timestamp = Column(DateTime)
 
 
-    	def __init__(self, userId, itemId, rating, dataSet):
-        	self.userId = userId
-	        self.itemId = itemId
-		self.rating = rating
-		self.dataSet = dataSet
+    	def __init__(self, userId, itemId, rating):
+			self.userId = userId
+			self.itemId = itemId
+			self.rating = rating
 
 class ICMcell(Base):
 	__tablename__ = 'ICM'
@@ -69,13 +68,15 @@ class Item(Base):
 	ratings = relationship("URMcell", backref="Item")
 	itemContent = relationship("ICMcell", backref="Item")
 
-	def __init__(self, itemName):
+	def __init__(self, itemName, dataSet):
 		self.itemName = itemName
+		self.dataSet = dataSet
 
 class Metadata(Base):
 	__tablename__ = 'Metadata'
 	id = Column(Integer, primary_key=True)
-	metaName = Column(Unicode(255), unique=True)
+	#And uniqueness? Can be a metaName, but Brad could be a director name or a actor name.... but are different items!
+	metaName = Column(Unicode(255))
 	metaType = Column(Unicode(255))
 	metaLang = Column(Unicode(255))
   
@@ -142,21 +143,24 @@ def initialize_sql(engine):
     Base.metadata.bind = engine
     Base.metadata.create_all(engine)
     try:
-	session = DBSession()
-    	model = MyModel(name=u'test name', value=55)
-	#user1 = user(username='John')
-    	#item1 = item(itemName='Inglourious Bastards', dataSet='NetFlix')	
-    	#metadata1 = metadata(metaName='Brad Pitt', metaType='actor', metaLang='eng')
-	#urmTest = URMcell(userId=user1.id, itemId=item1.id, rating=5)
-    	#icmTest = ICMcell(itemId=item1.id, metadataId=metadata1.id)
-	#session.add_all(user1, item1, metadata1, urmTest, icmTest)    	    	
-	session.add(model)	
-	session.flush()
-    	transaction.commit()
+		session = DBSession()
+		model = MyModel(name=u'test name', value=55)
+		#user1 = user(username='John')
+    		#item1 = item(itemName='Inglourious Bastards', dataSet='NetFlix')	
+	    	#metadata1 = metadata(metaName='Brad Pitt', metaType='actor', metaLang='eng')
+		#urmTest = URMcell(userId=user1.id, itemId=item1.id, rating=5)
+    		#icmTest = ICMcell(itemId=item1.id, metadataId=metadata1.id)
+		#session.add_all(user1, item1, metadata1, urmTest, icmTest)    	    	
+		session.add(model)	
+		session.flush()
+		transaction.commit()
     except IntegrityError:
         DBSession.rollback()
+    
+	
 
 def appmaker(engine):
     initialize_sql(engine)
+    #Base.metadata.drop_all(engine)	
     return default_get_root
 
