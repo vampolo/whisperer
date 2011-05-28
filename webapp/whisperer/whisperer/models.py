@@ -9,80 +9,66 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 
-from sqlalchemy import create_engine
-from sqlalchemy import Integer, String, Unicode
-from sqlalchemy import Column
-from sqlalchemy import TIMESTAMP, ForeignKey
+from sqlalchemy import Integer, String, Unicode, DateTime, ForeignKey, Column, create_engine, Table
 
 from zope.sqlalchemy import ZopeTransactionExtension
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
-class URMcell(Base):
-	__tablename__ = 'URM'
+class Rating(Base):
+	__tablename__ = 'rating'
 	id = Column(Integer, primary_key=True)
-	# put reference
-	userId = Column(Integer, ForeignKey('User.id'))
-	itemId = Column(Integer, ForeignKey('Item.id'))
+	userId = Column(Integer, ForeignKey('user.id'))
+	itemId = Column(Integer, ForeignKey('item.id'))
 	rating = Column(Integer)
-	# timestamp = Column(TIMESTAMP)
-	# timestamp = Column(DateTime)
+	timestamp = Column(DateTime)
+	
+	#many ratings refer to one item (many-to-one)
+	item= relationship("Item", backref="ratings")
 
-
-    	def __init__(self, userId, itemId, rating):
-			self.userId = userId
-			self.itemId = itemId
-			self.rating = rating
-
-class ICMcell(Base):
-	__tablename__ = 'ICM'
-	id = Column(Integer, primary_key=True)
-
-	# put reference
-	itemId = Column(Integer, ForeignKey('Item.id'))
-	metadataId = Column(Integer, ForeignKey('Metadata.id'))	
-
-	def __init__(self, itemId, metadataId):
-        	self.itemId = itemId
-	        self.metadataId = metadataId
+	def __init__(self, userId, itemId, rating):
+		self.userId = userId
+		self.itemId = itemId
+		self.rating = rating
 
 class User(Base):
-	__tablename__ = 'User'
+	__tablename__ = 'user'
 	id = Column(Integer, primary_key=True)
 	username = Column(Unicode(255), unique=True)
 
-	# is relationship right?!
-	ratings = relationship("URMcell", backref="User")
+	#one user has many ratings (one to many)
+	ratings = relationship("Rating", backref="user")
 
 	def __init__(self, username):
 		self.username = username
 
+items_metadatas_table = Table('items_metadatas', Base.metadata,
+    Column('item_id', Integer, ForeignKey('item.id')),
+    Column('metadata_id', Integer, ForeignKey('metadata.id'))
+)
+
 class Item(Base):
-	__tablename__ = 'Item'
+	__tablename__ = 'item'
 	id = Column(Integer, primary_key=True)
-	itemName = Column(Unicode(255), unique=True)
+	itemName = Column(Unicode(255))
 	dataSet = Column(Unicode(255))
-
-	# is relationship right?!
-	ratings = relationship("URMcell", backref="Item")
-	itemContent = relationship("ICMcell", backref="Item")
-
+	
+	#many metadatas refer to many items (many-to-one)
+	metadatas = relationship("Metadata", 
+							 secondary=items_metadatas_table,
+							 backref="items")
+	
 	def __init__(self, itemName, dataSet):
 		self.itemName = itemName
 		self.dataSet = dataSet
 
 class Metadata(Base):
-	__tablename__ = 'Metadata'
+	__tablename__ = 'metadata'
 	id = Column(Integer, primary_key=True)
-	#And uniqueness? Can be a metaName, but Brad could be a director name or a actor name.... but are different items!
 	metaName = Column(Unicode(255))
 	metaType = Column(Unicode(255))
 	metaLang = Column(Unicode(255))
-  
-	# is relationship right?!
-	itemContent = relationship("ICMcell", backref="Metadata")
-
 
 	def __init__(self, metaName, metaType, metaLang):
 		self.metaName = metaName
