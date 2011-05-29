@@ -48,11 +48,16 @@ items_metadatas_table = Table('items_metadatas', Base.metadata,
     Column('metadata_id', Integer, ForeignKey('metadata.id'))
 )
 
+class Dataset(Base):
+	__tablename__ = 'dataset'
+	id = Column(Integer, primary_key=True)
+	items = relationship("Item", backref="dataset")
+	
 class Item(Base):
 	__tablename__ = 'item'
 	id = Column(Integer, primary_key=True)
 	name = Column(Unicode(255))
-	dataset = Column(Unicode(255))
+	dataset_id = Column(Integer, ForeignKey('dataset.id'))
 	
 	#many metadatas refer to many items (many-to-one)
 	metadatas = relationship("Metadata", 
