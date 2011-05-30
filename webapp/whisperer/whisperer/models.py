@@ -13,6 +13,8 @@ from sqlalchemy import Integer, String, Unicode, DateTime, ForeignKey, Column, T
 
 from zope.sqlalchemy import ZopeTransactionExtension
 
+import datetime 
+
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
@@ -149,7 +151,8 @@ def populate_database():
 	metadatas = [dict(name='primo metadato', type='boh', lang='eng'),
 				 dict(name='secondo metadato', type='boh2', lang='eng'),
 				 dict(name='metadato3', type='boh3', lang='eng'),
-				 dict(name='metadato4', type='boh4', lang='eng')]
+				 dict(name='metadato4', type='boh4', lang='eng'),
+				 dict(name='metadato5', type='boh5', lang='eng')]
 	
 	
 	for meta in metadatas:
@@ -184,31 +187,10 @@ def populate_database():
 	ratings = session.query(Rating).all()
 	max_ratings = len(ratings)
 	
-	#construct the URM now
-	from numpy import *
-	URM = zeros((len(users),len(items)))
-	for r in ratings:
-		URM[r.user_id-1][r.item_id-1] = r.rating
-	print URM
-	print 'Verify'
-	print [(r.user_id, r.item_id, r.rating) for r in ratings]
+	from whisperer import Whisperer
 	
-	
-	#construct the ICM now
-	ICM = zeros((len(metadatas),len(items)))
-	for i in items:
-		for m in i.metadatas:
-			ICM[m.id-1][i.id-1] = 1
-	print ICM
-	print 'Verify'
-	print [(metadata.id, item.id, 1) for item in items for meta in item.metadatas]
-	
-	from pymatlab.matlab import MatlabSession
-	session = MatlabSession('matlab -nodisplay')
-	session.putvalue('URM', URM)
-	session.run('B=sparse(URM)')
-	session.run('A=full(B)')
-	print session.getvalue('A')
+	w = Whisperer()
+	w.do_something()
 	
 	
 def initialize_sql(engine):
@@ -223,7 +205,7 @@ def initialize_sql(engine):
 		transaction.commit()
     except IntegrityError:
         DBSession.rollback()
-    #populate_database()    	    	
+    populate_database()    	    	
     
 	
 

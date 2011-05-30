@@ -1,7 +1,7 @@
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
-from whisperer.models import appmaker
+from models import appmaker
 
 def main(global_config, **settings):
     	""" This function returns a WSGI application.
