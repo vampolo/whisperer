@@ -22,7 +22,7 @@ class Rating(Base):
 	user_id = Column(Integer, ForeignKey('user.id'))
 	item_id = Column(Integer, ForeignKey('item.id'))
 	rating = Column(Integer)
-	timestamp = Column(DateTime)
+	timestamp = Column(DateTime, default=datetime.datetime.now)
 	
 	#many ratings refer to one item (many-to-one)
 	item = relationship("Item", backref="ratings")
@@ -36,6 +36,7 @@ class User(Base):
 	__tablename__ = 'user'
 	id = Column(Integer, primary_key=True)
 	name = Column(Unicode(255), unique=True)
+	timestamp = Column(DateTime, default=datetime.datetime.now)
 
 	#one user has many ratings (one to many)
 	ratings = relationship("Rating", backref="user")
@@ -52,12 +53,14 @@ class Dataset(Base):
 	__tablename__ = 'dataset'
 	id = Column(Integer, primary_key=True)
 	items = relationship("Item", backref="dataset")
+	timestamp = Column(DateTime, default=datetime.datetime.now)
 	
 class Item(Base):
 	__tablename__ = 'item'
 	id = Column(Integer, primary_key=True)
 	name = Column(Unicode(255))
 	dataset_id = Column(Integer, ForeignKey('dataset.id'))
+	timestamp = Column(DateTime, default=datetime.datetime.now)
 	
 	#many metadatas refer to many items (many-to-one)
 	metadatas = relationship("Metadata", 
@@ -74,6 +77,7 @@ class Metadata(Base):
 	name = Column(Unicode(255))
 	type = Column(Unicode(255))
 	lang = Column(Unicode(255))
+	timestamp = Column(DateTime, default=datetime.datetime.now)
 	
 	#metadata-item relation set on item
 	
