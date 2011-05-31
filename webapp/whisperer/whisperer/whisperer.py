@@ -15,6 +15,14 @@ def clean(f):
 		return res
 	return wrapper
 
+def process(f):
+	@functools.wraps(f)
+	def wrapper(self, *args, **kwds):
+		if args[0] == 'AsySVD':
+			kwds = dict(kwds, userToTest=args[1].id)
+		return  f(self, *args, **kwds)
+	return wrapper
+
 class Whisperer(object):
 	def __init__(self):
 		self.m = MatlabSession('matlab -nosplash -nodisplay')
@@ -81,7 +89,7 @@ class Whisperer(object):
 		self._run("["+algname+"_model] = createModel_"+algname+"(urm)")
 		self._run("save('"+os.path.join(self.savepath, algname+'_model')+"', '"+algname+"_model')")
 			
-	
+	@process
 	@clean
 	def get_rec(self, algname, user, **param):
 		#function [recomList] = onLineRecom_AsySVD (userProfile, model,param)
@@ -93,6 +101,7 @@ class Whisperer(object):
 		self._run("load('"+os.path.join(self.savepath, algname+'_model')+"', '"+algname+"_model')")
 		self._run("[rec] = onLineRecom_"+algname+"(up, "+algname+"_model, param)")
 		return self._get("rec")
+		
 	
 	@clean	
 	def do_something(self):
@@ -104,6 +113,6 @@ class Whisperer(object):
 		print 'run AsySVD'
 		print self.create_model('AsySVD')
 		print 'get rec'
-		print self.get_rec('AsySVD', self.db.query(User).filter(User.id==2).first(), userToTest=2)
+		print self.get_rec('AsySVD', self.db.query(User).filter(User.id==2).first())
 		#do something
 		
