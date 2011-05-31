@@ -6,7 +6,7 @@
 	dir="ltr" lang="en-US" xml:lang="en-US">
 <metal:html define-macro="main">
 <head>
-	<title>eManager 1.0</title>
+	<title>Whisperer Admin</title>
 	<meta http-equiv="content-language" content="en" />
 	<meta http-equiv="cache-control" content="no-cache" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -26,28 +26,22 @@
 
 <div id="wrap">
 	<div id="header">
-		<h1><a class="bg" href="${request.resource_url(context)}" title="Home"></a>Manager 1.0</h1>
+		<h1><a class="bg" href="${request.application_url}" title="Home">Whisperer Admin</a></h1>
 		<p id="status">Logged is as admin, <a href="#" title="Sign Out?">Sign Out?</a></p>
 		<metal:description define-slot="description">
-		<h2><span>Hello, this is the WhispererAdmin</span></h2>
+		<h2><span>Hello, this is the Whisperer Admin</span></h2>
 		<p id="description">This is the management page of Whisperer. Here, the administrator is able to create/update the recommendation algorithms models.</p>
 		</metal:description>
 	</div>
     <div id="sidebar">
 		<ul class="items">
             <li class="active">
-            	<a href="${request.resource_url(context)}" title="WhispererAdmin">WhispererAdmin</a>
+            	<a href="${request.resource_url(context)}" title="Whisperer Admin">Whisperer Admin</a>
             </li>
             <li class="subitems">
 				<a href="#" title="Create Model">Create Single Model</a>
 				<ul>
-                    <li><a href="${request.resource_url(context, 'single_model')}" title="Algorithm #1">Algorithm #1</a></li>
-                    <li><a href="${request.resource_url(context, 'single_model')}" title="Algorithm #2">Algorithm #2</a></li>
-                    <li><a href="${request.resource_url(context, 'single_model')}" title="Algorithm #3">Algorithm #3</a></li>
-                    <li><a href="${request.resource_url(context, 'single_model')}" title="Algorithm #4">Algorithm #4</a></li>
-                    <li><a href="${request.resource_url(context, 'single_model')}" title="Algorithm #5">Algorithm #5</a></li>
-                    <li><a href="${request.resource_url(context, 'single_model')}" title="Algorithm #6">Algorithm #6</a></li>
-                    <li><a href="${request.resource_url(context, 'single_model')}" title="Algorithm #7">Algorithm #7</a></li>
+                    <li tal:repeat="alg h.algnames"><a href="${request.resource_url(request.root, 'single_model')}" title="Algorithm #1">${alg}</a></li>
 				</ul>
 			</li>
 		</ul>

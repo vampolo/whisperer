@@ -3,24 +3,31 @@ import numpy
 from models import User, Item, Rating, Metadata, DBSession
 import os
 import functools
+import datetime
 
 ALGOPATH='../../algorithms'
 
-def clean(f):
+def matlab(f):
 	@functools.wraps(f)
 	def wrapper(self, *args, **kwds):
+		if not self.m:
+			self._start_matlab()
 		self._clean()
 		res = f(self, *args, **kwds)
 		self._clean()
 		return res
 	return wrapper
-
+	
 class Whisperer(object):
-	def __init__(self):
+	
+	savepath = os.path.join(os.path.abspath(ALGOPATH), 'saved')
+	
+	def _start_matlab(self):
 		self.m = MatlabSession('matlab -nosplash -nodisplay')
-		print "addpath(genpath('"+os.path.abspath(ALGOPATH)+"'))"
 		self.m.run("addpath(genpath('"+os.path.abspath(ALGOPATH)+"'))")
-		self.savepath = os.path.join(os.path.abspath(ALGOPATH), 'saved')
+		
+	def __init__(self):
+		self.m = None
 		self.db = DBSession()
 	
 	def _put(self, name, value):
@@ -72,17 +79,19 @@ class Whisperer(object):
 			up[0][r.item.id-1] = r.rating
 		return up
 	
-	@clean
+	@matlab
 	def create_model(self, algname, urm=None):
+		"""Create a model and saves it the ALGORITHMS/saved directory"""
 		#function [model] = createModel_AsySVD(URM,param)
 		if not urm:
 			urm = self.create_urm()
 		self._put('urm', urm)
 		self._run("["+algname+"_model] = createModel_"+algname+"(urm)")
 		self._run("save('"+os.path.join(self.savepath, algname+'_model')+"', '"+algname+"_model')")
-			
-	@clean
+	
+	@matlab		
 	def _get_rec(self, algname, user, **param):
+		"""Return a recommendation using the matlab engine"""
 		#function [recomList] = onLineRecom_AsySVD (userProfile, model,param)
 		up = self.create_userprofile(user)
 		self._put('up', up)
@@ -94,13 +103,35 @@ class Whisperer(object):
 		return self._get("rec")
 	
 	def get_rec(self, algname, user, **param):
+		"""Wrapper aroung the real recommendation getter to set parameters"""
 		if algname == 'AsySVD':
 			param = dict(param, userToTest=user.id)
 		
 		return self._get_rec(algname, user, **param)
-		
 	
-	@clean	
+	@classmethod	
+	def get_algnames(self):
+		"""Return a list of algorithms in the system"""
+		algs = list()
+		for root, dirs, files in os.walk(ALGOPATH):
+			for f in files:
+				if f.startswith('createModel'):
+					algs.append(f[12:-2])
+		return algs
+	
+	@classmethod
+	def get_models_info(self):
+		"""Return a dict of algorithms in which there is a model created and the time the model was created"""
+		algnames = self.get_algnames()
+		algs = dict()
+		for root, dirs, files in os.walk(self.savepath):
+			for f in files:
+				if f[:-10] in algnames:
+					algo =f[:-10]
+					path = os.path.join(root, f)
+					algs[algo] = datetime.datetime.fromtimestamp(os.path.getmtime(path))
+		return algs
+		
 	def do_something(self):
 		print 'in something'
 		print 'URM'
@@ -111,5 +142,7 @@ class Whisperer(object):
 		print self.create_model('AsySVD')
 		print 'get rec'
 		print self.get_rec('AsySVD', self.db.query(User).filter(User.id==2).first())
+		print Whisperer.get_algnames()
+		print self.get_models_info()
 		#do something
 		
