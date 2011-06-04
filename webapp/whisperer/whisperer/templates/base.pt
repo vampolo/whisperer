@@ -26,7 +26,7 @@
 
 <div id="wrap">
 	<div id="header">
-		<h1><a class="bg" href="${request.application_url}" title="Home">Whisperer Admin</a></h1>
+		<h1><a class="bg" href="${request.application_url}" title="Home"></a></h1>
 		<p id="status">Logged is as admin, <a href="#" title="Sign Out?">Sign Out?</a></p>
 		<metal:description define-slot="description">
 		<h2><span>Hello, this is the Whisperer Admin</span></h2>
@@ -41,7 +41,7 @@
             <li class="subitems">
 				<a href="#" title="Create Model">Create Single Model</a>
 				<ul>
-                    <li tal:repeat="alg h.algnames"><a href="${request.resource_url(request.root, 'single_model')}" title="Algorithm #1">${alg}</a></li>
+                    <li tal:repeat="alg h.algnames"><a href="${request.resource_url(request.root, alg)}" title="${alg}">${alg}</a></li>
 				</ul>
 			</li>
 		</ul>
@@ -51,7 +51,7 @@
 	<div id="content">
 		
 		<p id="congrats" class="alert">
-			<span class="txt"><span class="icon"></span><strong>Congrats:</strong> Models created successfully!</span>
+			<span class="txt"><span class="icon"></span>Models creation added to the queue</span>
 			<a href="#" class="close" title="Close"><span class="bg"></span>Close</a>
 		</p>
 		

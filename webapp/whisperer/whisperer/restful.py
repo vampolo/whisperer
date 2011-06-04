@@ -2,40 +2,33 @@ from pyramid.view import view_config
 #get all classes from the models to be used
 from models import *
 
-@view_config(name='addUser', context='whisperer.models.MyApp',
+@view_config(name='add', context='whisperer.models.User',
              renderer='json')
 def add_user(request):
-	username = request.GET.get('username')
-	if not username:
-		return dict()	
+	name = request.POST.get('name')
+	if not name:
+		return dict(error = 'no name provided')	
 	session = DBSession()
-	if not session.query(User).filter(User.username.in_([username])).all():
-		user_added = User(username)
+	if not session.query(User).filter(User.name.in_([name])).all():
+		user_added = User(name=name)
 		session.add(user_added)
-		session.flush()
-		transaction.commit()
-		added_obj = session.query(User).filter(User.username.in_([username])).first()
-		return dict(added_user_id = str(added_obj.id), added_user_name = str(added_obj.username))        
-	return dict(message = 'Username already used, please insert another')
+		return dict(name=user_added.name, id=user_added.id)        
+	return dict(error = 'Username already used, please insert another')
 	
-@view_config(name='addItem', context='whisperer.models.MyApp',
+@view_config(name='add', context='whisperer.models.Item',
              renderer='json')
 def add_Item(request):
-	item_name = request.GET.get('item_name')
-	dataSet = request.GET.get('dataSet')
-	if not item_name:
-		return dict()
+	name = request.POST.get('name')
+	if not name:
+		return dict(error = 'no name provided')
 	session = DBSession()
-	if not session.query(Item).filter(Item.itemName.in_([item_name])).all():			
-		item_added = Item(item_name, dataSet)
+	if not session.query(Item).filter(Item.name.in_([name])).all():			
+		item_added = Item(name=name)
 		session.add(item_added)
-		session.flush()
-		transaction.commit()
-		added_item_obj = session.query(Item).filter(Item.itemName.in_([item_name])).first()
-		return dict(added_item = str(added_item_obj.itemName), added_item_dataset = str(added_item_obj.dataSet))                			
+		return dict(name = item_added.name, id = item_added.id)                			
 	return dict(message = 'Item already exists, please insert another')	
 
-@view_config(name='addinICM', context='whisperer.models.MyApp',
+@view_config(name='add', context='whisperer.models.Metadata',
              renderer='json')
 def add_Metadata_to_Item(request):
 	item_name = request.GET.get('item_name')

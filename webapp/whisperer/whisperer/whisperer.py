@@ -1,15 +1,22 @@
 from pymatlab.matlab import MatlabSession
 import numpy 
-from models import User, Item, Rating, Metadata, DBSession
+from models import User, Item, Rating, Metadata
 import os
 import functools
 import datetime
 
-ALGOPATH='../../algorithms'
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+engine = create_engine('sqlite:///../whisperer.db', echo=True)
+Session = sessionmaker(bind=engine)
+
+ALGOPATH=os.path.join(os.getcwd(),'../../algorithms')
+print ALGOPATH
 
 def matlab(f):
 	@functools.wraps(f)
 	def wrapper(self, *args, **kwds):
+		print self, args, kwds
 		if not self.m:
 			self._start_matlab()
 		self._clean()
@@ -28,7 +35,7 @@ class Whisperer(object):
 		
 	def __init__(self):
 		self.m = None
-		self.db = DBSession()
+		self.db = Session()
 	
 	def _put(self, name, value):
 		self.m.putvalue(name, value)
@@ -117,6 +124,7 @@ class Whisperer(object):
 			for f in files:
 				if f.startswith('createModel'):
 					algs.append(f[12:-2])
+		algs.sort()
 		return algs
 	
 	@classmethod
@@ -133,13 +141,13 @@ class Whisperer(object):
 		return algs
 		
 	def do_something(self):
-		print 'in something'
 		print 'URM'
 		print self.create_urm()
 		print 'ICM'
 		print self.create_icm()
 		print 'run AsySVD'
-		print self.create_model('AsySVD')
+		#print self.create_model('AsySVD')
+		#print self.create_model('cosineIIknn')
 		print 'get rec'
 		print self.get_rec('AsySVD', self.db.query(User).filter(User.id==2).first())
 		print Whisperer.get_algnames()
