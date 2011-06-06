@@ -75,6 +75,20 @@ class Item(Base):
 							 secondary=items_metadatas_table,
 							 backref="items")
 	
+	def __getitem__(self, key):
+		session = DBSession()
+		try:
+			item = session.query(Item).filter(Item.name==key).one()
+		except NoResultFound:
+			raise KeyError
+		self.id = item.id
+		self.name = item.name
+		self.timestamp = item.timestamp
+		res = Metadata()
+		res.__name__ = key
+		res.__parent__ = self
+		return res
+			
 	
 class Metadata(Base):
 	__tablename__ = 'metadata'
@@ -85,11 +99,6 @@ class Metadata(Base):
 	timestamp = Column(DateTime, default=datetime.datetime.now)
 	
 	#metadata-item relation set on item
-	
-	def __init__(self, name, type, lang):
-		self.name = name
-		self.type = type
-		self.lang = lang
 
 class Algorithm(object):
 	def __init__(self, name, date):
@@ -119,7 +128,7 @@ class MyApp(object):
 			a.__name__ = key
 			return a
 		else:
-			return KeyError
+			raise KeyError
     
 
 root = MyApp()

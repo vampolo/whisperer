@@ -12,6 +12,7 @@ def add_user(request):
 	if not session.query(User).filter(User.name.in_([name])).all():
 		user_added = User(name=name)
 		session.add(user_added)
+		session.flush()
 		return dict(name=user_added.name, id=user_added.id)        
 	return dict(error = 'Username already used, please insert another')
 	
@@ -25,41 +26,28 @@ def add_Item(request):
 	if not session.query(Item).filter(Item.name.in_([name])).all():			
 		item_added = Item(name=name)
 		session.add(item_added)
+		session.flush()
 		return dict(name = item_added.name, id = item_added.id)                			
 	return dict(message = 'Item already exists, please insert another')	
 
 @view_config(name='add', context='whisperer.models.Metadata',
              renderer='json')
-def add_Metadata_to_Item(request):
-	item_name = request.GET.get('item_name')
-	metadata_name = request.GET.get('metadata_name')
-	metadata_type = request.GET.get('metadata_type')
-	metadata_lang = request.GET.get('metadata_lang')
-	if not item_name:
-		return dict()
+def add_Metadata_to_Item(context, request):
+	name = request.POST.get('name')
+	mtype = request.POST.get('type')
+	lang = request.POST.get('lang')
+	if not name or not mtype or not lang:
+		return dict(error = 'parameters missing')
 	session = DBSession()
-	if not session.query(Item).filter(Item.itemName.in_([item_name])).all():
-		return dict(warning='No item name matched! Please, add the item on the DB first')				
-	if not session.query(Metadata).filter(Metadata.metaName.in_([metadata_name])).all():			
-		metadata_added = Metadata(metadata_name, metadata_type, metadata_lang)
-		session.add(metadata_added)
+	try:
+		metadata = session.query(Metadata).filter(Metadata.name == name).one()
+	except NoResultFound:			
+		metadata = Metadata(name = name, type = mtype, lang =lang)
+		session.add(metadata)
 		session.flush()
-		transaction.commit()
-	#get objects to use in ICM
-	added_item_obj = session.query(Item).filter(Item.itemName.in_([item_name])).first()
-	added_metadata_obj = session.query(Metadata).filter(Metadata.metaName.in_([metadata_name])).first()	
-	#Adds in ICM
-	ICMcell_added = ICMcell(added_item_obj.id, added_metadata_obj.id)
-	session.add(ICMcell_added)
-	session.flush()
-	transaction.commit()
-	#Necessary to get again
-	added_item_obj = session.query(Item).filter(Item.itemName.in_([item_name])).first()
-	added_metadata_obj = session.query(Metadata).filter(Metadata.metaName.in_([metadata_name])).first()		
-	added_cells_list = session.query(ICMcell).filter(ICMcell.itemId.in_([added_item_obj.id])).all()
-	added_cell_obj = added_cells_list[-1]		
-	return dict(ICM_itemID = str(added_cell_obj.itemId), ICM_metadataID = str(added_cell_obj.metadataId),
-		added_metadata = str(added_metadata_obj.metaName))                			      			
+	#metadata.items.append(context.__parent__) FIX ME! IMPORTANT!
+	return dict(item_id = context.__parent__.id, id = metadata.id,
+		name = metadata.name, type = metadata.type, lang = metadata.lang)                			      			
 	
 
 @view_config(name='addRating', context='whisperer.models.MyApp',
