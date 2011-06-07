@@ -80,6 +80,19 @@ class Metadata(Base):
 	
 	#metadata-item relation set on item
 
+class UserResource(object):
+	
+	def __getitem__(self, key):
+		session = DBSession()
+		try:
+			user = session.query(User).filter(User.id==key).one()
+		except NoResultFound:
+			raise KeyError
+		res = User()
+		res.__name__ = key
+		res.__parent__ = user
+		return res
+		
 class ItemResource(object):
 	
 	def __getitem__(self, key):
@@ -104,7 +117,7 @@ class MyApp(object):
     
     def __getitem__(self, key):
 		if key == 'user':
-			user = User()
+			user = UserResource()
 			user.__parent__ = self
 			user.__name__ = key
 			return user

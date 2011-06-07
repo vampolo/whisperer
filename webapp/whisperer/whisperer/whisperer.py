@@ -7,7 +7,7 @@ import datetime
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-engine = create_engine('sqlite:///../whisperer.db', echo=True)
+engine = create_engine('sqlite:///whisperer.db', echo=True)
 Session = sessionmaker(bind=engine)
 
 ALGOPATH=os.path.join(os.getcwd(),'../../algorithms')

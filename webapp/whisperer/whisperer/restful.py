@@ -1,8 +1,9 @@
 from pyramid.view import view_config
 #get all classes from the models to be used
 from models import *
+import whisperer
 
-@view_config(name='add', context='whisperer.models.User',
+@view_config(name='add', context='whisperer.models.UserResource',
              renderer='json')
 def add_user(request):
 	name = request.POST.get('name')
@@ -15,8 +16,9 @@ def add_user(request):
 		session.flush()
 		return dict(name=user_added.name, id=user_added.id)        
 	return dict(error = 'Username already used, please insert another')
-	
-@view_config(name='add', context='whisperer.models.Item',
+
+#curl -X POST  http://127.0.0.1:6543/item/add -d "name=hello"
+@view_config(name='add', context='whisperer.models.ItemResource',
              renderer='json')
 def add_Item(request):
 	name = request.POST.get('name')
@@ -49,7 +51,7 @@ def add_Metadata_to_Item(context, request):
 	return dict(item_id = context.__parent__.id, id = metadata.id,
 		name = metadata.name, type = metadata.type, lang = metadata.lang)                			      			
 	
-
+#curl -X POST  http://127.0.0.1:6543/item/1/addRating -d "userid=1&rating=4"
 @view_config(name='addRating', context='whisperer.models.Item',
              renderer='json')
 def add_rating(context, request):
@@ -66,15 +68,13 @@ def add_rating(context, request):
 	context.__parent__.item = r
 	return dict(success = 'true')           
 
-@view_config(name='getRecommendation', context='whisperer:models.User',
+#curl -X POST  http://127.0.0.1:6543/user/1/getRec -d "alg=AsySVD"
+@view_config(name='getRec', context='whisperer.models.User',
              renderer='json')            
-def get_Recommendation(request):	
-	userID = request.GET.get('user')
-	if not userID:
-		return dict()
-	#here we should use the output of the algorithm, organize it and retrieve the TOP 10/x items...
-	return dict()
-
-
-
-
+def get_recommendation(context, request):
+	w = whisperer.Whisperer()
+	algname = request.POST.get('alg')
+	if algname not in w.get_algnames():
+		return dict(error = '"alg" parameter missing or algorithm not found')
+	res = w.get_rec(algname, context.__parent__)
+	return dict([(i,r[0])for i,r in enumerate(res)])
