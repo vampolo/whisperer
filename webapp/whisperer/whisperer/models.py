@@ -29,11 +29,6 @@ class Rating(Base):
 	#many ratings refer to one item (many-to-one)
 	item = relationship("Item", backref="ratings")
 
-	def __init__(self, user, item, rating):
-		self.user = user
-		self.item = item
-		self.rating = rating
-
 class User(Base):
 	__tablename__ = 'user'
 	id = Column(Integer, primary_key=True)
@@ -90,10 +85,10 @@ class ItemResource(object):
 	def __getitem__(self, key):
 		session = DBSession()
 		try:
-			item = session.query(Item).filter(Item.name==key).one()
+			item = session.query(Item).filter(Item.id==key).one()
 		except NoResultFound:
 			raise KeyError
-		res = Metadata()
+		res = Item()
 		res.__name__ = key
 		res.__parent__ = item
 		return res

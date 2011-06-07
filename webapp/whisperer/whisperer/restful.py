@@ -30,7 +30,7 @@ def add_Item(request):
 		return dict(name = item_added.name, id = item_added.id)                			
 	return dict(message = 'Item already exists, please insert another')	
 
-@view_config(name='add', context='whisperer.models.Metadata',
+@view_config(name='addMetadata', context='whisperer.models.Item',
              renderer='json')
 def add_Metadata_to_Item(context, request):
 	name = request.POST.get('name')
@@ -50,24 +50,21 @@ def add_Metadata_to_Item(context, request):
 		name = metadata.name, type = metadata.type, lang = metadata.lang)                			      			
 	
 
-@view_config(name='addRating', context='whisperer.models.MyApp',
+@view_config(name='addRating', context='whisperer.models.Item',
              renderer='json')
-def add_rating(request):
-	userID = request.GET.get('user')
-	itemID = request.GET.get('item')
-	rating = request.GET.get('rating')
-	if not rating:
-		return dict()
+def add_rating(context, request):
+	userid = request.POST.get('userid')
+	rating = request.POST.get('rating')
+	if not rating or not userid:
+		return dict(error = 'parameters missing')
 	session = DBSession()
-	URMcell_added = URMcell(userID, itemID, rating)
-	session.add(URMcell_added)
-	session.flush()
-	transaction.commit()
-	#To retrieve the last,  we must get all the list the get the last element
-	added_cells_list = session.query(URMcell).filter(URMcell.itemId.in_([itemID])).all()
-	added_cell_obj = added_cells_list[-1]		
-	return dict(URMcell_added_user = str(added_cell_obj.userId), URMcell_added_item = str(added_cell_obj.itemId), 
-		rating = str(rating))           
+	try:
+		user = session.query(User).filter(User.id == userid).one()
+	except NoResultFound:
+		return dict(error= 'user not found')
+	r = Rating(rating = rating, user=user)
+	context.__parent__.item = r
+	return dict(success = 'true')           
 
 @view_config(name='getRecommendation', context='whisperer:models.User',
              renderer='json')            
