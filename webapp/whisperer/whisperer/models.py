@@ -73,22 +73,7 @@ class Item(Base):
 	#many metadatas refer to many items (many-to-many)
 	metadatas = relationship("Metadata", 
 							 secondary=items_metadatas_table,
-							 backref="items")
-	
-	def __getitem__(self, key):
-		session = DBSession()
-		try:
-			item = session.query(Item).filter(Item.name==key).one()
-		except NoResultFound:
-			raise KeyError
-		self.id = item.id
-		self.name = item.name
-		self.timestamp = item.timestamp
-		res = Metadata()
-		res.__name__ = key
-		res.__parent__ = self
-		return res
-			
+							 backref="items")		
 	
 class Metadata(Base):
 	__tablename__ = 'metadata'
@@ -100,6 +85,19 @@ class Metadata(Base):
 	
 	#metadata-item relation set on item
 
+class ItemResource(object):
+	
+	def __getitem__(self, key):
+		session = DBSession()
+		try:
+			item = session.query(Item).filter(Item.name==key).one()
+		except NoResultFound:
+			raise KeyError
+		res = Metadata()
+		res.__name__ = key
+		res.__parent__ = item
+		return res
+		
 class Algorithm(object):
 	def __init__(self, name, date):
 		self.name = name
@@ -116,7 +114,7 @@ class MyApp(object):
 			user.__name__ = key
 			return user
 		if key == 'item':
-			item = Item()
+			item = ItemResource()
 			item.__parent__ = self
 			item.__name__ = key
 			return item

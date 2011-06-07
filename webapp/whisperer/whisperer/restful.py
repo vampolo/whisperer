@@ -45,7 +45,7 @@ def add_Metadata_to_Item(context, request):
 		metadata = Metadata(name = name, type = mtype, lang =lang)
 		session.add(metadata)
 		session.flush()
-	#metadata.items.append(context.__parent__) FIX ME! IMPORTANT!
+	metadata.items.append(context.__parent__)
 	return dict(item_id = context.__parent__.id, id = metadata.id,
 		name = metadata.name, type = metadata.type, lang = metadata.lang)                			      			
 	
