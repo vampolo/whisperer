@@ -18,12 +18,12 @@
 		</p>
 	
 		<h2>${context.name} Algorithm</h2>
-		<form method="get" action="${request.resource_url(request.root, 'model', context.name, 'create')}">
+		<form method="POST" action="${request.resource_url(request.root, context.name, 'create')}">
 		<fieldset>
 			<input type="hidden" value="test"/>
 			<label>To create this algorithm's model, click here:</label><br/><br/>
 			<div id="create_all">
-			<a class="button" title="Submit"><span>Create model</span></a>
+			<input type="submit" value="Submit">Create model</input>
 			</div>
 		</fieldset>
 		</form>

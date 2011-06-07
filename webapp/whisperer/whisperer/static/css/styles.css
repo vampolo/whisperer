@@ -270,7 +270,7 @@ strong	{
 	float: left;
 	height: 16px;
 	font-size: 1.4em;
-	padding: 7px 5px;
+	/*padding: 7px 5px;*/
 	line-height: 1.25em;
 }
 #content .large_input	{

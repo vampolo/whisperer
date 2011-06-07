@@ -11,12 +11,10 @@ engine = create_engine('sqlite:///whisperer.db', echo=True)
 Session = sessionmaker(bind=engine)
 
 ALGOPATH=os.path.join(os.getcwd(),'../../algorithms')
-print ALGOPATH
 
 def matlab(f):
 	@functools.wraps(f)
 	def wrapper(self, *args, **kwds):
-		print self, args, kwds
 		if not self.m:
 			self._start_matlab()
 		self._clean()

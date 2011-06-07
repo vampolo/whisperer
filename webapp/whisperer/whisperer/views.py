@@ -26,6 +26,7 @@ def single_model(context, request):
 			 context='whisperer.models.Algorithm',
              renderer='json')
 def create_model(context, request):
+	print 'PASSING'
 	tasks.gen_model(context.name)
 	return dict(test='success')
     

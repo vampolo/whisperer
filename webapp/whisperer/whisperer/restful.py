@@ -77,4 +77,4 @@ def get_recommendation(context, request):
 	if algname not in w.get_algnames():
 		return dict(error = '"alg" parameter missing or algorithm not found')
 	res = w.get_rec(algname, context.__parent__)
-	return dict([(i,r[0])for i,r in enumerate(res)])
+	return dict([(i+1,r[0])for i,r in enumerate(res)])
