@@ -20,10 +20,9 @@
 		<h2>${context.name} Algorithm</h2>
 		<form method="POST" action="${request.resource_url(request.root, context.name, 'create')}">
 		<fieldset>
-			<input type="hidden" value="test"/>
 			<label>To create this algorithm's model, click here:</label><br/><br/>
 			<div id="create_all">
-			<input type="submit" value="Submit">Create model</input>
+			<a href="#" class="button submit" title="Submit"><span>Create model</span></a>
 			</div>
 		</fieldset>
 		</form>

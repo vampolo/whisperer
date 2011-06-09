@@ -48,10 +48,6 @@ $(document).ready(function() {
 		
 	});
 	
-	$('#create_all').click(function(){
-		$('#congrats').show('slow');
-	});
-	
 	$(document).keyup(function(event) {
 		if (event.keyCode == 13) {
 			$(this).parents("form").submit();
@@ -61,9 +57,19 @@ $(document).ready(function() {
 	
 	$('.submit').click(function() {
 									 
-		$(this).parents("form").submit();
+		var url = $(this).parents("form").attr('action');
+		$.ajax({
+		  url: url,
+		  context: document.body,
+		  success: function(){
+			$('#congrats').show('slow');
+		  },
+		  error: function(){
+			  alert('Error creating the model/models')
+		  }
+		});
 		return false;
 		
 	});
-
+	
 });

@@ -56,11 +56,11 @@
 		</p>
 		
 		<h2>Recommendation algorithms settings</h2>
-		<form method="post" action="">
+		<form method="post" action="${request.resource_url(request.root, 'createAllModels')}">
 		<fieldset>
 			<label>To create all models at once, click here:</label><br/>
 			<div id="create_all">
-			<a href="#" class="button" title="Submit"><span>Create all models</span></a>
+			<a href="#" class="button submit" title="Submit"><span>Create all models</span></a>
 			</div>
 		</fieldset>
 		</form>

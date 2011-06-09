@@ -9,7 +9,7 @@ import tasks
 def admin(request):
 	return dict()
 
-@view_config(name='create',
+@view_config(name='createAllModels',
 			 context='whisperer.models.MyApp',
              renderer='json')
 def admin_create(context, request):
@@ -26,7 +26,6 @@ def single_model(context, request):
 			 context='whisperer.models.Algorithm',
              renderer='json')
 def create_model(context, request):
-	print 'PASSING'
 	tasks.gen_model(context.name)
 	return dict(test='success')
     
