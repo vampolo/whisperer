@@ -11,7 +11,7 @@ engine = create_engine('sqlite:///whisperer.db', echo=True)
 Session = sessionmaker(bind=engine)
 
 #request.registry.settings
-ALGOPATH=os.path.join(os.getcwd(),'../algorithms')
+ALGOPATH=os.path.join(os.getcwd(),'algorithms')
 
 def matlab(f):
 	@functools.wraps(f)
