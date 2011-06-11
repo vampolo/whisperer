@@ -1,2 +1,3 @@
 include *.txt *.ini *.cfg *.rst
 recursive-include whisperer *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml
+recursive-include algorithms *.m *.mat
