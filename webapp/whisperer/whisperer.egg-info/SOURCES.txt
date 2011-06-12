@@ -5,13 +5,16 @@ development.ini
 production.ini
 setup.cfg
 setup.py
+algorithms/__init__.py
 algorithms/dataset/icm.mat
+algorithms/dataset/readme.txt
 algorithms/dataset/titles.mat
 algorithms/dataset/urmFull.mat
 algorithms/dataset/urmTest.mat
 algorithms/dataset/urmTraining.mat
 algorithms/recsys_matlab_codes/algorithms/collaborative/latentFactors/AsySVD/createModel_AsySVD.m
 algorithms/recsys_matlab_codes/algorithms/collaborative/latentFactors/AsySVD/learnFactorModelRabosio.m
+algorithms/recsys_matlab_codes/algorithms/collaborative/latentFactors/AsySVD/learnFactorModelRabosio_mex.c
 algorithms/recsys_matlab_codes/algorithms/collaborative/latentFactors/AsySVD/onLineRecom_AsySVD.m
 algorithms/recsys_matlab_codes/algorithms/collaborative/latentFactors/pureSVD/createModel_pureSVD.m
 algorithms/recsys_matlab_codes/algorithms/collaborative/latentFactors/pureSVD/onLineRecom_pureSVD.m
@@ -21,6 +24,8 @@ algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemIt
 algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemItem_cosineKNN/createModel_cosineIIknn.m
 algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemItem_cosineKNN/onLineRecom_NNCosNgbr_II_knn.m
 algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemItem_cosineKNN/onLineRecom__CosNgbr_II_knn.m
+algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemItem_cosineKNN/provaCosShrink.mexa64
+algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemItem_cosineKNN/provaCosShrink_mex.c
 algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemItem_dr/createModel_drII.m
 algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemItem_dr/onLineRecom_drII.m
 algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemItem_drKNN/createModel_drIIknn.m
@@ -29,6 +34,8 @@ algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemIt
 algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemItem_pearsonKoren/createModel_pearsonIIkoren.m
 algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemItem_pearsonKoren/onLineRecom_pearsonIIkoren.m
 algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemItem_pearsonKoren/pearsonCoeff.m
+algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemItem_pearsonKoren/pearsonCoeff.mexa64
+algorithms/recsys_matlab_codes/algorithms/collaborative/neighborhoodBased/ItemItem_pearsonKoren/pearsonCoeff_mex.c
 algorithms/recsys_matlab_codes/algorithms/content-based/normalizeICMwithIDF.m
 algorithms/recsys_matlab_codes/algorithms/content-based/directContent_knn/createModel_directContent_knn.m
 algorithms/recsys_matlab_codes/algorithms/content-based/directContent_knn/onLineRecom_directContent_knn.m
@@ -107,6 +114,7 @@ algorithms/recsys_matlab_codes/utilities/importExport/parseItemTitleDat.m
 algorithms/recsys_matlab_codes/utilities/importExport/parseURMstatic.m
 algorithms/recsys_matlab_codes/utilities/importExport/prepareURMxLSA.m
 algorithms/recsys_matlab_codes/utilities/importExport/prepareURMxLSAnew.m
+algorithms/saved/.gitignore
 algorithms/saved/AsySVD_model.mat
 algorithms/saved/cosineIIknn_model.mat
 whisperer/__init__.py
