@@ -14,7 +14,7 @@ def add_user(request):
 		user_added = User(name=name)
 		session.add(user_added)
 		session.flush()
-		return dict(name=user_added.name, id=user_added.id)        
+		return dict(name=user_added.name)        
 	return dict(error = 'Username already used, please insert another')
 
 #curl -X POST  http://127.0.0.1:6543/item/add -d "name=hello"
@@ -29,7 +29,7 @@ def add_Item(request):
 		item_added = Item(name=name)
 		session.add(item_added)
 		session.flush()
-		return dict(name = item_added.name, id = item_added.id)                			
+		return dict(name = item_added.name)                			
 	return dict(message = 'Item already exists, please insert another')	
 
 @view_config(name='addMetadata', context='whisperer.models.Item',
@@ -48,20 +48,20 @@ def add_Metadata_to_Item(context, request):
 		session.add(metadata)
 		session.flush()
 	metadata.items.append(context.__parent__)
-	return dict(item_id = context.__parent__.id, id = metadata.id,
+	return dict(item_name = context.__parent__.name, id = metadata.id,
 		name = metadata.name, type = metadata.type, lang = metadata.lang)                			      			
 	
-#curl -X POST  http://127.0.0.1:6543/item/1/addRating -d "userid=1&rating=4"
+#curl -X POST  http://127.0.0.1:6543/item/1/addRating -d "useremail=1&rating=4"
 @view_config(name='addRating', context='whisperer.models.Item',
              renderer='json')
 def add_rating(context, request):
-	userid = request.POST.get('userid')
+	useremail = request.POST.get('useremail')
 	rating = request.POST.get('rating')
-	if not rating or not userid:
+	if not rating or not useremail:
 		return dict(error = 'parameters missing')
 	session = DBSession()
 	try:
-		user = session.query(User).filter(User.id == userid).one()
+		user = session.query(User).filter(User.name == useremail).one()
 	except NoResultFound:
 		return dict(error= 'user not found')
 	r = Rating(rating = rating, user=user)

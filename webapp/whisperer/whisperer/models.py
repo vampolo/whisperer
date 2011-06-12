@@ -21,8 +21,8 @@ Base = declarative_base()
 class Rating(Base):
 	__tablename__ = 'rating'
 	id = Column(Integer, primary_key=True)
-	user_id = Column(Integer, ForeignKey('user.id'))
-	item_id = Column(Integer, ForeignKey('item.id'))
+	user_name = Column(Integer, ForeignKey('user.name'))
+	item_name = Column(Integer, ForeignKey('item.name'))
 	rating = Column(Integer)
 	timestamp = Column(DateTime, default=datetime.datetime.now)
 	
@@ -31,20 +31,20 @@ class Rating(Base):
 
 class User(Base):
 	__tablename__ = 'user'
-	id = Column(Integer, primary_key=True)
-	name = Column(Unicode(255), unique=True)
+	name = Column(Unicode(255), primary_key=True)
 	timestamp = Column(DateTime, default=datetime.datetime.now)
 
 	#one user has many ratings (one to many)
 	ratings = relationship("Rating", backref="user")
 
+#I changed here from item id to item name as it should be only one, and it is easier to manipulate from Milo
 items_metadatas_table = Table('items_metadatas', Base.metadata,
-    Column('item_id', Integer, ForeignKey('item.id')),
+    Column('item_name', Integer, ForeignKey('item.name')),
     Column('metadata_id', Integer, ForeignKey('metadata.id'))
 )
 
 items_datasets_table = Table('items_datasets', Base.metadata,
-    Column('item_id', Integer, ForeignKey('item.id')),
+    Column('item_name', Integer, ForeignKey('item.name')),
     Column('dataset_id', Integer, ForeignKey('dataset.id'))
 )
 
@@ -61,8 +61,7 @@ class Dataset(Base):
 	
 class Item(Base):
 	__tablename__ = 'item'
-	id = Column(Integer, primary_key=True)
-	name = Column(Unicode(255))
+	name = Column(Unicode(255), primary_key=True)
 	timestamp = Column(DateTime, default=datetime.datetime.now)
 	
 	#many metadatas refer to many items (many-to-many)
@@ -85,7 +84,7 @@ class UserResource(object):
 	def __getitem__(self, key):
 		session = DBSession()
 		try:
-			user = session.query(User).filter(User.id==key).one()
+			user = session.query(User).filter(User.name==key).one()
 		except NoResultFound:
 			raise KeyError
 		res = User()
@@ -98,7 +97,7 @@ class ItemResource(object):
 	def __getitem__(self, key):
 		session = DBSession()
 		try:
-			item = session.query(Item).filter(Item.id==key).one()
+			item = session.query(Item).filter(Item.name==key).one()
 		except NoResultFound:
 			raise KeyError
 		res = Item()
