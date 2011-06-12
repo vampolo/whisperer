@@ -5,6 +5,7 @@ development.ini
 production.ini
 setup.cfg
 setup.py
+algorithms/__init__.py
 algorithms/dataset/icm.mat
 algorithms/dataset/readme.txt
 algorithms/dataset/titles.mat
