@@ -5,7 +5,6 @@ development.ini
 production.ini
 setup.cfg
 setup.py
-algorithms/__init__.py
 algorithms/dataset/icm.mat
 algorithms/dataset/readme.txt
 algorithms/dataset/titles.mat
@@ -115,8 +114,7 @@ algorithms/recsys_matlab_codes/utilities/importExport/parseURMstatic.m
 algorithms/recsys_matlab_codes/utilities/importExport/prepareURMxLSA.m
 algorithms/recsys_matlab_codes/utilities/importExport/prepareURMxLSAnew.m
 algorithms/saved/.gitignore
-algorithms/saved/AsySVD_model.mat
-algorithms/saved/cosineIIknn_model.mat
+algorithms/saved/__init__.py
 whisperer/__init__.py
 whisperer/celeryconfig.py
 whisperer/helpers.py
