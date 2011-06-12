@@ -86,7 +86,7 @@ class UserResource(object):
 		session = DBSession()
 		try:
 			user = session.query(User).filter(User.id==int(key)).one()
-		except NoResultFound, ValueError:
+		except (NoResultFound, ValueError):
 			raise KeyError
 		res = User()
 		res.__name__ = key
@@ -99,7 +99,7 @@ class ItemResource(object):
 		session = DBSession()
 		try:
 			item = session.query(Item).filter(Item.id==int(key)).one()
-		except NoResultFound, ValueError:
+		except (NoResultFound, ValueError):
 			raise KeyError
 		res = Item()
 		res.__name__ = key
