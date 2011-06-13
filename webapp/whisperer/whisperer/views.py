@@ -14,7 +14,7 @@ def admin(request):
              renderer='json')
 def admin_create(context, request):
 	for algname in Whisperer.get_algnames():
-		tasks.gen_model(algname)
+		tasks.gen_model.delay(algname)
 	return dict()
 
 @view_config(context='whisperer.models.Algorithm',
@@ -26,7 +26,7 @@ def single_model(context, request):
 			 context='whisperer.models.Algorithm',
              renderer='json')
 def create_model(context, request):
-	tasks.gen_model(context.name)
+	tasks.gen_model.delay(context.name)
 	return dict(test='success')
     
 @view_config(name='populate',

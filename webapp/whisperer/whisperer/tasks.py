@@ -7,6 +7,9 @@ from celery.task import task
 from whisperer import Whisperer
 import datetime
 
+#goshawk@earth:~/Projects/whisperer/webapp/whisperer$ PYTHONPATH=/usr/local/lib/python2.7/dist-packages/whisperer-0.0-py2.7.egg/whisperer/:$PYTHONPATH celeryd --loglevel=INFO
+
+
 @task()
 def gen_model(algname):
 	w = Whisperer()
