@@ -4,13 +4,14 @@ from models import User, Item, Rating, Metadata
 import os
 import functools
 import datetime
+import config
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 engine = create_engine('sqlite:///whisperer.db', echo=True)
 Session = sessionmaker(bind=engine)
 
-ALGOPATH=os.path.join(os.getcwd(),'../../algorithms')
+#request.registry.settings
 
 def matlab(f):
 	@functools.wraps(f)
@@ -25,11 +26,12 @@ def matlab(f):
 	
 class Whisperer(object):
 	
-	savepath = os.path.join(os.path.abspath(ALGOPATH), 'saved')
+	savepath = config.SAVEPATH
+	algopath = config.ALGOPATH
 	
 	def _start_matlab(self):
 		self.m = MatlabSession('matlab -nosplash -nodisplay')
-		self.m.run("addpath(genpath('"+os.path.abspath(ALGOPATH)+"'))")
+		self.m.run("addpath(genpath('"+os.path.abspath(self.algopath)+"'))")
 		
 	def __init__(self):
 		self.m = None
@@ -118,7 +120,7 @@ class Whisperer(object):
 	def get_algnames(self):
 		"""Return a list of algorithms in the system"""
 		algs = list()
-		for root, dirs, files in os.walk(ALGOPATH):
+		for root, dirs, files in os.walk(self.algopath):
 			for f in files:
 				if f.startswith('createModel'):
 					algs.append(f[12:-2])

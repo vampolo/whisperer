@@ -1,6 +1,7 @@
 import sys
 import os
-sys.path.append(os.getcwd())
+here = os.path.abspath(os.path.dirname(__file__))
+sys.path.append(here)
 
 from celery.task import task
 from whisperer import Whisperer

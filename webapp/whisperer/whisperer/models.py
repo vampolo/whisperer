@@ -84,8 +84,13 @@ class UserResource(object):
 	def __getitem__(self, key):
 		session = DBSession()
 		try:
+<<<<<<< HEAD
 			user = session.query(User).filter(User.name==key).one()
 		except NoResultFound:
+=======
+			user = session.query(User).filter(User.id==int(key)).one()
+		except (NoResultFound, ValueError):
+>>>>>>> e3e719acab68731282a7c4b1e37413b688d91282
 			raise KeyError
 		res = User()
 		res.__name__ = key
@@ -97,8 +102,13 @@ class ItemResource(object):
 	def __getitem__(self, key):
 		session = DBSession()
 		try:
+<<<<<<< HEAD
 			item = session.query(Item).filter(Item.name==key).one()
 		except NoResultFound:
+=======
+			item = session.query(Item).filter(Item.id==int(key)).one()
+		except (NoResultFound, ValueError):
+>>>>>>> e3e719acab68731282a7c4b1e37413b688d91282
 			raise KeyError
 		res = Item()
 		res.__name__ = key
