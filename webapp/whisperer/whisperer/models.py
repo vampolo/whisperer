@@ -85,7 +85,7 @@ class UserResource(object):
 	def __getitem__(self, key):
 		session = DBSession()
 		try:
-			user = session.query(User).filter(User.name==key).one()
+			user = session.query(User).filter(User.name==int(key)).one()
 		except (NoResultFound, ValueError):
 			raise KeyError
 		res = User()
@@ -98,7 +98,7 @@ class ItemResource(object):
 	def __getitem__(self, key):
 		session = DBSession()
 		try:
-			item = session.query(Item).filter(Item.name==key).one()
+			item = session.query(Item).filter(Item.name==int(key)).one()
 		except (NoResultFound, ValueError):
 			raise KeyError
 		res = Item()

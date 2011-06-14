@@ -78,3 +78,9 @@ def get_recommendation(context, request):
 		return dict(error = '"alg" parameter missing or algorithm not found')
 	res = w.get_rec(algname, context.__parent__)
 	return dict([(i+1,r[0])for i,r in enumerate(res)])
+
+@view_config(name='algnames', context='whisperer.models.MyApp',
+             renderer='json')            
+def get_algnames(context, request)
+	w = whisperer.Whisperer()
+	return dict(algnames=w.get_algnames())
