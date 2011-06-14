@@ -14,7 +14,7 @@ def admin(request):
              renderer='json')
 def admin_create(context, request):
 	for algname in Whisperer.get_algnames():
-		tasks.gen_model(algname)
+		tasks.gen_model.delay(algname)
 	return dict()
 
 @view_config(context='whisperer.models.Algorithm',
@@ -26,7 +26,7 @@ def single_model(context, request):
 			 context='whisperer.models.Algorithm',
              renderer='json')
 def create_model(context, request):
-	tasks.gen_model(context.name)
+	tasks.gen_model.delay(context.name)
 	return dict(test='success')
     
 @view_config(name='populate',
@@ -71,6 +71,7 @@ def populate_database(context, request):
 	
 	for username in users:
 		if not session.query(User).filter(User.name.in_([username])).all():
+			print 'here'
 			user = User(name = username)
 			user.ratings.append(Rating(user = user, item = items[randint(0, max_item)], rating = randint(0,5)))
 			session.add(user)
@@ -81,4 +82,4 @@ def populate_database(context, request):
 	
 	ratings = session.query(Rating).all()
 	max_ratings = len(ratings)
-	return dict()
+	return dict(users=len(users))

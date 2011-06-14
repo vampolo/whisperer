@@ -114,10 +114,9 @@ algorithms/recsys_matlab_codes/utilities/importExport/parseItemTitleDat.m
 algorithms/recsys_matlab_codes/utilities/importExport/parseURMstatic.m
 algorithms/recsys_matlab_codes/utilities/importExport/prepareURMxLSA.m
 algorithms/recsys_matlab_codes/utilities/importExport/prepareURMxLSAnew.m
-algorithms/saved/.gitignore
-algorithms/saved/__init__.py
 whisperer/__init__.py
 whisperer/celeryconfig.py
+whisperer/config.py
 whisperer/helpers.py
 whisperer/models.py
 whisperer/restful.py

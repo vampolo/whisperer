@@ -8,7 +8,7 @@ import config
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-engine = create_engine('sqlite:///whisperer.db', echo=True)
+engine = create_engine(config.DB, echo=True)
 Session = sessionmaker(bind=engine)
 
 #request.registry.settings
