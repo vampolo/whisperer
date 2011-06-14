@@ -82,4 +82,4 @@ def populate_database(context, request):
 	
 	ratings = session.query(Rating).all()
 	max_ratings = len(ratings)
-	return dict(users=users)
+	return dict(users=len(users))
