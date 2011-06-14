@@ -51,17 +51,17 @@ def add_Metadata_to_Item(context, request):
 	return dict(item_name = context.__parent__.name, id = metadata.id,
 		name = metadata.name, type = metadata.type, lang = metadata.lang)                			      			
 	
-#curl -X POST  http://127.0.0.1:6543/item/1/addRating -d "useremail=1&rating=4"
+#curl -X POST  http://127.0.0.1:6543/item/1/addRating -d "userid=1&rating=4"
 @view_config(name='addRating', context='whisperer.models.Item',
              renderer='json')
 def add_rating(context, request):
-	useremail = request.POST.get('useremail')
+	userid = request.POST.get('userid')
 	rating = request.POST.get('rating')
 	if not rating or not useremail:
 		return dict(error = 'parameters missing')
 	session = DBSession()
 	try:
-		user = session.query(User).filter(User.name == useremail).one()
+		user = session.query(User).filter(User.id == int(userid)).one()
 	except NoResultFound:
 		return dict(error= 'user not found')
 	r = Rating(rating = rating, user=user)
