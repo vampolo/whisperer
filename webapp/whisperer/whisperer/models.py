@@ -45,7 +45,7 @@ items_metadatas_table = Table('items_metadatas', Base.metadata,
 )
 
 items_datasets_table = Table('items_datasets', Base.metadata,
-    Column('item_id', Integer, ForeignKey('item.name')),
+    Column('item_id', Integer, ForeignKey('item.id')),
     Column('dataset_id', Integer, ForeignKey('dataset.id'))
 )
 

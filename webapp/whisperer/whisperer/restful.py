@@ -14,7 +14,7 @@ def add_user(request):
 		user_added = User(name=name)
 		session.add(user_added)
 		session.flush()
-		return dict(name=user_added.name)        
+		return dict(name=user_added.name, id=user_added.id)        
 	return dict(error = 'Username already used, please insert another')
 
 #curl -X POST  http://127.0.0.1:6543/item/add -d "name=hello"
@@ -29,7 +29,7 @@ def add_Item(request):
 		item_added = Item(name=name)
 		session.add(item_added)
 		session.flush()
-		return dict(name = item_added.name)                			
+		return dict(name = item_added.name, id = item_added.id)                			
 	return dict(message = 'Item already exists, please insert another')	
 
 @view_config(name='addMetadata', context='whisperer.models.Item',
