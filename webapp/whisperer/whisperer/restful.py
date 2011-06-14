@@ -79,8 +79,9 @@ def get_recommendation(context, request):
 	res = w.get_rec(algname, context.__parent__)
 	return dict([(i+1,r[0])for i,r in enumerate(res)])
 
+#curl http://127.0.0.1:6543/algnames
 @view_config(name='algnames', context='whisperer.models.MyApp',
              renderer='json')            
-def get_algnames(context, request)
+def get_algnames(context, request):
 	w = whisperer.Whisperer()
 	return dict(algnames=w.get_algnames())
