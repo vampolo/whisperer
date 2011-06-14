@@ -71,6 +71,7 @@ def populate_database(context, request):
 	
 	for username in users:
 		if not session.query(User).filter(User.name.in_([username])).all():
+			print 'here'
 			user = User(name = username)
 			user.ratings.append(Rating(user = user, item = items[randint(0, max_item)], rating = randint(0,5)))
 			session.add(user)
@@ -81,4 +82,4 @@ def populate_database(context, request):
 	
 	ratings = session.query(Rating).all()
 	max_ratings = len(ratings)
-	return dict()
+	return dict(users=users)
