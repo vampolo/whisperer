@@ -14,7 +14,7 @@ def add_user(request):
 		user_added = User(name=name)
 		session.add(user_added)
 		session.flush()
-		return dict(name=user_added.name)        
+		return dict(name=user_added.name, id=user_added.id)        
 	return dict(error = 'Username already used, please insert another')
 
 #curl -X POST  http://127.0.0.1:6543/item/add -d "name=hello"
@@ -29,7 +29,7 @@ def add_Item(request):
 		item_added = Item(name=name)
 		session.add(item_added)
 		session.flush()
-		return dict(name = item_added.name)                			
+		return dict(name = item_added.name, id = item_added.id)                			
 	return dict(message = 'Item already exists, please insert another')	
 
 @view_config(name='addMetadata', context='whisperer.models.Item',
@@ -57,17 +57,17 @@ def add_Metadata_to_Item(context, request):
 def add_rating(context, request):
 	userid = request.POST.get('userid')
 	rating = request.POST.get('rating')
-	if not rating or not useremail:
+	if not rating or not userid:
 		return dict(error = 'parameters missing')
 	session = DBSession()
 	try:
-		user = session.query(User).filter(User.id == int(userid)).one()
+		user = session.query(User).filter(User.id == userid).one()
 	except NoResultFound:
 		return dict(error= 'user not found')
 	r = Rating(rating = rating, user=user)
 	context.__parent__.item = r
-	return dict(success = 'true')           
-
+	return dict(success = 'true')
+	
 #curl -X POST  http://127.0.0.1:6543/user/1/getRec -d "alg=AsySVD"
 @view_config(name='getRec', context='whisperer.models.User',
              renderer='json')            

@@ -32,13 +32,12 @@ class Rating(Base):
 class User(Base):
 	__tablename__ = 'user'
 	id = Column(Integer, primary_key=True)
-	name = Column(Unicode(255))
+	name = Column(Unicode(255), unique=True)
 	timestamp = Column(DateTime, default=datetime.datetime.now)
 
 	#one user has many ratings (one to many)
 	ratings = relationship("Rating", backref="user")
 
-#I changed here from item id to item name as it should be only one, and it is easier to manipulate from Milo
 items_metadatas_table = Table('items_metadatas', Base.metadata,
     Column('item_id', Integer, ForeignKey('item.id')),
     Column('metadata_id', Integer, ForeignKey('metadata.id'))
