@@ -6,7 +6,7 @@ import functools
 import datetime
 import config
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 engine = create_engine(config.DB, echo=True)
 Session = sessionmaker(bind=engine)
@@ -58,7 +58,7 @@ class Whisperer(object):
 		if not ratings:
 			ratings = self.db.query(Rating).all()
 		
-		urm = numpy.zeros((len(users),len(items)))
+		urm = numpy.zeros((self.db.query(func.max(User.id)).one()[0],self.db.query(func.max(Item.id)).one()[0]))
 		for r in ratings:
 			urm[r.user_id-1][r.item_id-1] = r.rating
 		return urm
@@ -70,7 +70,7 @@ class Whisperer(object):
 		if not metadatas:
 			metadatas = self.db.query(Metadata).all()
 		
-		icm = numpy.zeros((len(metadatas),len(items)))
+		icm = numpy.zeros((self.db.query(func.max(Metadata.id)).one()[0],self.db.query(func.max(Item.id)).one()[0]))
 		for i in items:
 			for m in i.metadatas:
 				icm[m.id-1][i.id-1] = 1
@@ -81,7 +81,7 @@ class Whisperer(object):
 			items = self.db.query(Item).all()
 		
 		ratings = self.db.query(Rating).all()
-		up = numpy.zeros((1,len(items)))
+		up = numpy.zeros((1,self.db.query(func.max(Item.id)).one()[0]))
 		for r in ratings:
 			up[0][r.item.id-1] = r.rating
 		return up
@@ -151,14 +151,14 @@ class Whisperer(object):
 		print 'ICM'
 		print self.create_icm()
 		print 'run AsySVD'
-		#print self.create_model('AsySVD')
+		print self.create_model('AsySVD')
 		#print self.create_model('cosineIIknn')
 		print 'get rec'
-		print self.get_rec('AsySVD', self.db.query(User).filter(User.id==2).first())
+		print self.get_rec('AsySVD', self.db.query(User).filter(User.id==35).first())
 		print Whisperer.get_algnames()
 		print self.get_models_info()
 		#do something
 
 if __name__=='__main__':
 	w = Whisperer()
-	w.load_urm()
+	w.do_something()
