@@ -139,6 +139,11 @@ class Whisperer(object):
 					path = os.path.join(root, f)
 					algs[algo] = datetime.datetime.fromtimestamp(os.path.getmtime(path))
 		return algs
+	
+	@matlab
+	def load_urm(self):
+		self._run("load('urmFull.mat')")
+		self._run("A=full(urm)")
 		
 	def do_something(self):
 		print 'URM'
@@ -153,4 +158,7 @@ class Whisperer(object):
 		print Whisperer.get_algnames()
 		print self.get_models_info()
 		#do something
-		
+
+if __name__=='__main__':
+	w = Whisperer()
+	w.load_urm()
