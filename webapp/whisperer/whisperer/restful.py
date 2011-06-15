@@ -52,6 +52,7 @@ def add_Metadata_to_Item(context, request):
 		name = metadata.name, type = metadata.type, lang = metadata.lang)                			      			
 	
 #curl -X POST  http://127.0.0.1:6543/item/1/addRating -d "userid=1&rating=4"
+
 @view_config(name='addRating', context='whisperer.models.Item',
              renderer='json')
 def add_rating(context, request):
@@ -65,9 +66,11 @@ def add_rating(context, request):
 	except NoResultFound:
 		return dict(error= 'user not found')
 	r = Rating(rating = rating, user=user)
-	context.__parent__.item = r
-	return dict(success = 'true')
-	
+	r.item = context.__parent__
+	session.add(r)
+	session.flush()
+	return dict(id = r.id, userid=r.user_id, itemid=r.item_id)   
+
 #curl -X POST  http://127.0.0.1:6543/user/1/getRec -d "alg=AsySVD"
 @view_config(name='getRec', context='whisperer.models.User',
              renderer='json')            
