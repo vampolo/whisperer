@@ -16,11 +16,9 @@ Session = sessionmaker(bind=engine)
 def matlab(f):
 	@functools.wraps(f)
 	def wrapper(self, *args, **kwds):
-		if not self.m:
-			self._start_matlab()
-		self._clean()
+		self._start_matlab()
 		res = f(self, *args, **kwds)
-		self._clean()
+		self._close()
 		return res
 	return wrapper
 	
@@ -48,6 +46,10 @@ class Whisperer(object):
 	
 	def _clean(self):
 		self.m.run("clear")
+	
+	def _close(self):
+		self.m.close()
+		self.m = None
 		
 	def create_urm(self, users=None, items=None, ratings=None):
 		"""Return the user rating matrix"""
