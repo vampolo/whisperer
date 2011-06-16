@@ -18,7 +18,7 @@ def matlab(f):
 	def wrapper(self, *args, **kwds):
 		self._start_matlab()
 		res = f(self, *args, **kwds)
-		self._close()
+		self._close_matlab()
 		return res
 	return wrapper
 	
@@ -47,7 +47,7 @@ class Whisperer(object):
 	def _clean(self):
 		self.m.run("clear")
 	
-	def _close(self):
+	def _close_matlab(self):
 		self.m.close()
 		self.m = None
 		
