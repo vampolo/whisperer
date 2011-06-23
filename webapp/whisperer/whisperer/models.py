@@ -110,7 +110,7 @@ class Algorithm(object):
 	def __init__(self, name, date):
 		self.name = name
 		self.date = date.strftime("%d/%m/%y %H:%M") if date else None
-
+	
 class MyApp(object):	
     __name__ = None																																																																																																																																																																																																																																																																																																														
     __parent__ = None
