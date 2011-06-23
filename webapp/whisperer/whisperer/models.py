@@ -32,7 +32,7 @@ class Rating(Base):
 class User(Base):
 	__tablename__ = 'user'
 	id = Column(Integer, primary_key=True)
-	name = Column(Unicode(255), unique=True)
+	name = Column(Unicode(255))
 	timestamp = Column(DateTime, default=datetime.datetime.now)
 
 	#one user has many ratings (one to many)
@@ -144,9 +144,9 @@ def default_get_root(request):
 	
 	
 def initialize_sql(engine):
-    DBSession.configure(bind=engine)
-    Base.metadata.bind = engine
-    Base.metadata.create_all(engine)
+	DBSession.configure(bind=engine)
+	Base.metadata.bind = engine
+	Base.metadata.create_all(engine)
     
 	
 

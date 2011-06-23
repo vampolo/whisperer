@@ -44,11 +44,9 @@ class Whisperer(object):
 	def _get(self, name):
 		return self.m.getvalue(name)
 	
-	def _clean(self):
-		self.m.run("clear")
-	
 	def _close_matlab(self):
-		self.m.close()
+		if self.m:
+			self.m.close()
 		self.m = None
 		
 	def create_urm(self, users=None, items=None, ratings=None):
@@ -146,6 +144,30 @@ class Whisperer(object):
 	def load_urm(self):
 		self._run("load('urmFull.mat')")
 		self._run("A=full(urm)")
+		urm = self._get("A")
+		#force matlab to close and free memory
+		self._close_matlab()
+		print 'Out of matlab!'
+		#for (row,col),value in numpy.ndenumerate(urm):
+		for i,row in enumerate(urm):
+			print 'processing row: %s' % (i)
+			self.db.add(User(name="netflix%s" % (i)))
+			self.db.flush()	
+		self.db.commit()
+		#urm[r.user_id-1][r.item_id-1]
+	
+	@matlab
+	def load_titles(self, filename='/tmp/movie_titles.txt'):
+		self._run("load('titles.mat')")
+		titles = self._get('titles')
+		l = list()
+		for row in titles:
+			l.append(''.join(row).rstrip())
+		f = open(filename, 'w')
+		for item in l:
+			f.write("%s\n" % item)
+		f.close()
+		return l
 		
 	def do_something(self):
 		print 'URM'
@@ -163,4 +185,5 @@ class Whisperer(object):
 
 if __name__=='__main__':
 	w = Whisperer()
-	w.do_something()
+	w.load_urm()
+	#w.do_something()
