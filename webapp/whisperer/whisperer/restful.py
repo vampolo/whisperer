@@ -88,3 +88,14 @@ def get_recommendation(context, request):
 def get_algnames(context, request):
 	w = whisperer.Whisperer()
 	return dict(algnames=w.get_algnames())
+
+#curl http://127.0.0.1:6543/alg_date -d "alg=AsySVD"
+@view_config(name='alg_date', context='whisperer.models.Algorithm',
+             renderer='json')            
+def get_alg_date(context, request):
+	w = whisperer.Whisperer()
+	try:
+		date = context.date
+	except NoResultFound:
+		return dict(error= 'algorithm model creation date not found')
+	return dict(date=date)

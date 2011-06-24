@@ -41,7 +41,7 @@ def populate_database(context, request):
 	session = DBSession()
 	
 	#create some users for first
-	users = ['Andeia', 'Vincenzo', 'Leonardo', 'Paolo']
+	users = ['Andreia', 'Vincenzo', 'Leonardo', 'Paolo']
 	items = ['film1', 'film2', 'film3', 'film4', 'film5']
 	metadatas = [dict(name='primo metadato', type='boh', lang='eng'),
 				 dict(name='secondo metadato', type='boh2', lang='eng'),

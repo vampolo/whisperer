@@ -168,12 +168,16 @@ class Whisperer(object):
 		#force matlab to close and free memory
 		self._close_matlab()
 		print 'Out of matlab!'
-		#for (row,col),value in numpy.ndenumerate(urm):
-		for i,row in enumerate(urm):
-			print 'processing row: %s' % (i)
-			self.db.add(User(name="netflix%s" % (i)))
-			self.db.flush()	
-		self.db.commit()
+		for (row,col),value in numpy.ndenumerate(urm):
+			print 'processing rating %i for user %i and item %i' % (value, row, col)
+			if value is not 0:
+				self.db.add(Rating(user_id=row+1, item_id=col+1, rating=value))
+				self.db.flush()	
+				self.db.commit()
+		#for i,row in enumerate(urm):
+		#	print 'processing row: %s' % (i)
+		#	self.db.add(User(name="netflix%s" % (i)))
+		#	self.db.flush()	
 		#urm[r.user_id-1][r.item_id-1]
 	
 	@matlab
