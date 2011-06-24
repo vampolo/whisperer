@@ -94,22 +94,26 @@ class Whisperer(object):
 			urm = self.create_urm()
 		if not icm:
 			icm = self.create_icm()
+
+		alg = self._get_model_name(algname)
 		self._put('urm', urm)
 		self._put('icm', icm)
-		self._run("["+algname+"_model] = createModel_"+algname+"(urm, icm)")
-		self._run("save('"+os.path.join(self.savepath, algname+'_model')+"', '"+algname+"_model')")
+		self._run("["+alg+"_model] = createModel_"+alg+"(urm, icm)")
+		self._run("save('"+os.path.join(self.savepath, alg+'_model')+"', '"+alg+"_model')")
 	
 	@matlab		
 	def _get_rec(self, algname, user, **param):
 		"""Return a recommendation using the matlab engine"""
 		#function [recomList] = onLineRecom_AsySVD (userProfile, model,param)
 		up = self.create_userprofile(user)
+		alg = self._get_model_name(algname)
+		
 		self._put('up', up)
 		self._run("param = struct()")
 		for k,v in param.iteritems():
 			self._run("param."+str(k)+" = "+str(v))
-		self._run("load('"+os.path.join(self.savepath, algname+'_model')+"', '"+algname+"_model')")
-		self._run("[rec] = onLineRecom_"+algname+"(up, "+algname+"_model, param)")
+		self._run("load('"+os.path.join(self.savepath, alg+'_model')+"', '"+alg+"_model')")
+		self._run("[rec] = onLineRecom_"+algname+"(up, "+alg+"_model, param)")
 		return self._get("rec")
 	
 	def get_rec(self, algname, user, **param):
@@ -125,10 +129,23 @@ class Whisperer(object):
 		algs = list()
 		for root, dirs, files in os.walk(self.algopath):
 			for f in files:
-				if f.startswith('createModel'):
+				if f.startswith('onLineRecom'):
 					algs.append(f[12:-2])
 		algs.sort()
 		return algs
+		
+	@classmethod
+	def _get_model_name(self, algname=None):
+		for root, dirs, files in os.walk(self.algopath):
+			for f in files:
+				if f.startswith('onLineRecom'):
+					if f[12:-2] == algname:
+						for mf in files:
+							if mf.startswith('createModel'):
+								return mf[12:-2]
+					
+		return None
+		
 	
 	@classmethod
 	def get_models_info(self):
@@ -137,10 +154,11 @@ class Whisperer(object):
 		algs = dict()
 		for root, dirs, files in os.walk(self.savepath):
 			for f in files:
-				if f[:-10] in algnames:
-					algo =f[:-10]
-					path = os.path.join(root, f)
-					algs[algo] = datetime.datetime.fromtimestamp(os.path.getmtime(path))
+				for algname in algnames:
+					if f[:-10] in self._get_model_name(algname):
+						algo =f[:-10]
+						path = os.path.join(root, f)
+						algs[algname] = datetime.datetime.fromtimestamp(os.path.getmtime(path))
 		return algs
 	
 	@matlab
@@ -192,5 +210,6 @@ class Whisperer(object):
 
 if __name__=='__main__':
 	w = Whisperer()
-	w.load_urm()
+	print w.get_models_info()
+	#w.load_urm()
 	#w.do_something()
