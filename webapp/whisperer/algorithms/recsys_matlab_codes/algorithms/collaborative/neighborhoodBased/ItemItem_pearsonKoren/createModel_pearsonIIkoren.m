@@ -1,6 +1,6 @@
-function [model] = createModel_pearsonIIkoren (URM,param)
+function [model] = createModel_pearsonIIkoren (URM,ICM,param)
 % URM = matrix with user-ratings
-% param: 	[param.model] --> opzionale, contiene già la matrice dr e i bias
+% param: 	[param.model] --> opzionale, contiene giï¿½ la matrice dr e i bias
 %			param.knn --> K similar items
 %           [param.lambdaS] -->  shrinking factor per s_{ij}
 %           [param.lambdaI] -->  shrinking factor per media item b_{i}

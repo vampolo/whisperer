@@ -1,4 +1,4 @@
-function [model] = createModel_movieAvg (URM,param)
+function [model] = createModel_movieAvg (URM,ICM,param)
 % URM = matrix with user-ratings
 %
 % output: model.movieAvg

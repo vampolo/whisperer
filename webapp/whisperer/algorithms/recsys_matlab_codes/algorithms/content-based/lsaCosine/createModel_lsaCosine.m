@@ -1,8 +1,8 @@
-function [model] = createModel_lsaCosine (URM,param)
+function [model] = createModel_lsaCosine (URM,ICM,param)
 % URM = matrix with user-ratings
 % param.ls = latent size
 % [param.itemModel] = matrice projItem=s*v' (non necessariamente normalizzata)
-% [param.icm] = Item-content matrix
+% ICM = Item-content matrix
 
     if isfield(param,'itemModel')
         d=param.itemModel;
@@ -11,17 +11,13 @@ function [model] = createModel_lsaCosine (URM,param)
             d=d(1:ls,:);
         end        
     else
-        if isfield(param,'icm')
-            if isfield(param,'ls')
-                ls=param.ls;
-            else
-                ls=300;
-            end                  
-            [u,s,v]=svds(param.icm,ls);
-            d = s*v';
+        if isfield(param,'ls')
+            ls=param.ls;
         else
-            warning('lsa: not enough parameters..');
+            ls=300;
         end
+        [s,v]=svds(ICM,ls);
+        d = s*v';
     end
     
     if isfield(param,'shrinking')

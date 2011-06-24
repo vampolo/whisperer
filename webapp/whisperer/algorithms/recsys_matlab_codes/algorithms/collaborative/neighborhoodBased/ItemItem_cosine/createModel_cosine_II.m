@@ -1,4 +1,4 @@
-function [model] = createModel_cosine_II (URM,param)
+function [model] = createModel_cosine_II (URM,ICM,param)
 % URM = matrix with user-ratings
 
     if (exist('param')==0)

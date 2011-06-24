@@ -1,4 +1,4 @@
-function [model] = createModel_drII (URM,param)
+function [model] = createModel_drII (URM,ICM,param)
 % URM = matrix with user-ratings
 
     if (exist('param')==0)

@@ -1,7 +1,8 @@
-function [model] = createModel_directContent_knn (URM,param)
+function [model] = createModel_directContent_knn (URM,ICM,param)
 % URM = matrix with user-ratings
+% ICM = item-content matrix 
 % param: 	
-%                   param.icm --> item-content matrix (mandatory field!)
+%                  
 %					param.knn --> contiene il numero di K da considerare nella matrice DR
 %                   param.memoryProblem --> boolean, se true impone l'utilizzo della
 %                                           versione ottimizzata per matrici sparse grandi
@@ -21,20 +22,16 @@ function [model] = createModel_directContent_knn (URM,param)
 %                                                  as shrinking constant (not
 %                                                  compatible with param.noNormalization)
 
-
+    
     if (exist('param')==0)
         param=struct;
+        icm=ICM;
         param.memoryProblem=false;
     else
+        icm=ICM;
         if (~isfield(param,'memoryProblem'))
             param.memoryProblem=false;
         end
-    end
-    
-    if isfield(param,'icm')
-        icm=param.icm;
-    else
-        error('directContent: missing Item-content matrix');
     end
     
     if ~(isfield(param,'shrinkNormalization'))

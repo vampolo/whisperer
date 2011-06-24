@@ -1,6 +1,6 @@
-function [model] = createModel_AsySVD (URM,param)
+function [model] = createModel_AsySVD (URM,ICM,param)
 % URM = matrix with user-ratings
-% param: 	[param.model] --> opzionale, contiene già modello utenti e item 
+% param: 	[param.model] --> opzionale, contiene giï¿½ modello utenti e item 
 %                               e i bias (global effects)
 %           [param.continueIterate] --> together with param.model, if TRUE
 %               continue to iterate starting from the passed model. Default

@@ -87,13 +87,16 @@ class Whisperer(object):
 		return up
 	
 	@matlab
-	def create_model(self, algname, urm=None):
+	def create_model(self, algname, urm=None, icm=None):
 		"""Create a model and saves it the ALGORITHMS/saved directory"""
 		#function [model] = createModel_AsySVD(URM,param)
 		if not urm:
 			urm = self.create_urm()
+		if not icm:
+			icm = self.create_icm()
 		self._put('urm', urm)
-		self._run("["+algname+"_model] = createModel_"+algname+"(urm)")
+		self._put('icm', icm)
+		self._run("["+algname+"_model] = createModel_"+algname+"(urm, icm)")
 		self._run("save('"+os.path.join(self.savepath, algname+'_model')+"', '"+algname+"_model')")
 	
 	@matlab		

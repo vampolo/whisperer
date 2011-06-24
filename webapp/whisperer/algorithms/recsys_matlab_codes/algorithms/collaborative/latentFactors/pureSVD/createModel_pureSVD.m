@@ -1,4 +1,4 @@
-function [model] = createModel_pureSVD (URM, modelParam)
+function [model] = createModel_pureSVD (URM, ICM, modelParam)
 % URM = matrix with user-ratings
 % modelParam = modelParam.ls specifies the latenSize
 

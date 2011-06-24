@@ -1,9 +1,9 @@
-function [model] = createModel_cosineIIknn (URM,param)
+function [model] = createModel_cosineIIknn (URM,ICM,param)
 % URM = matrix with user-ratings
 % param: 	empty --> esegue classico coseno
-%                   [param.model] --> opzionale, contiene già la matrice dr
+%                   [param.model] --> opzionale, contiene giï¿½ la matrice dr
 %                   e i bias
-%					param.drCos --> opzionale, contiene già la matrice DR=URM'*URM
+%					param.drCos --> opzionale, contiene giï¿½ la matrice DR=URM'*URM
 %					param.knn --> contiene il numero di K da considerare nella matrice DR
 %                   param.memoryProblem --> boolean, se true impone l'utilizzo della
 %                                           versione ottimizzata per matrici sparse grandi

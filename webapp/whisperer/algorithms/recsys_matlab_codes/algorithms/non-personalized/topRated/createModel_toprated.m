@@ -1,4 +1,4 @@
-function [model] = createModel_toprated (URM,modelParam)
+function [model] = createModel_toprated (URM,ICM,modelParam)
 % URM = matrix with user-ratings
     try
         URM=spones(URM);
