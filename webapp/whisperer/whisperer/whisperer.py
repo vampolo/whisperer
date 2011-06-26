@@ -94,7 +94,6 @@ class Whisperer(object):
 			urm = self.create_urm()
 		if not icm:
 			icm = self.create_icm()
-
 		alg = self._get_model_name(algname)
 		self._put('urm', urm)
 		self._put('icm', icm)
@@ -107,7 +106,6 @@ class Whisperer(object):
 		#function [recomList] = onLineRecom_AsySVD (userProfile, model,param)
 		up = self.create_userprofile(user)
 		alg = self._get_model_name(algname)
-		
 		self._put('up', up)
 		self._run("param = struct()")
 		for k,v in param.iteritems():
@@ -200,16 +198,15 @@ class Whisperer(object):
 		print 'ICM'
 		print self.create_icm()
 		print 'run AsySVD'
-		print self.create_model('AsySVD')
+		#print self.create_model('random')
 		#print self.create_model('cosineIIknn')
-		print 'get rec'
-		print self.get_rec('AsySVD', self.db.query(User).filter(User.id==35).first())
-		print Whisperer.get_algnames()
-		print self.get_models_info()
+		#print 'get rec'
+		print self.get_rec('random', self.db.query(User).filter(User.id==9).first())
+		#print Whisperer.get_algnames()
+		#print self.get_models_info()
 		#do something
 
 if __name__=='__main__':
 	w = Whisperer()
-	print w.get_models_info()
 	#w.load_urm()
-	#w.do_something()
+	w.do_something()

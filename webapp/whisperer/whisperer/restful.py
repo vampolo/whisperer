@@ -2,6 +2,7 @@ from pyramid.view import view_config
 #get all classes from the models to be used
 from models import *
 import whisperer
+import numpy
 
 @view_config(name='add', context='whisperer.models.UserResource',
              renderer='json')
@@ -80,7 +81,9 @@ def get_recommendation(context, request):
 	if algname not in w.get_algnames():
 		return dict(error = '"alg" parameter missing or algorithm not found')
 	res = w.get_rec(algname, context.__parent__)
-	return dict([(i+1,r[0])for i,r in enumerate(res)])
+	if algname == "AsySVD":
+		return dict([(i+1,r[0])for i,r in enumerate(res)])
+	return dict([(col+1,value)for (row,col),value in numpy.ndenumerate(res) if not numpy.isnan(value)])
 
 #curl http://127.0.0.1:6543/algnames
 @view_config(name='algnames', context='whisperer.models.MyApp',
