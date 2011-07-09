@@ -27,7 +27,7 @@
 <div id="wrap">
 	<div id="header">
 		<h1><a class="bg" href="${request.application_url}" title="Home"></a></h1>
-		<p id="status">Logged is as admin, <a href="#" title="Sign Out?">Sign Out?</a></p>
+		<p id="status">Need to manage surveys? Go to <a href="http://milo.vincenzo-ampolo.net/admin" title="MiloAdmin Page">MiloAdmin Page</a></p>
 		<metal:description define-slot="description">
 		<h2><span>Hello, this is the Whisperer Admin</span></h2>
 		<p id="description">This is the management page of Whisperer. Here, the administrator is able to create/update the recommendation algorithms models.</p>

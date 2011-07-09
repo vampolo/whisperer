@@ -89,7 +89,7 @@ class Whisperer(object):
 	@matlab
 	def create_model(self, algname, urm=None, icm=None):
 		"""Create a model and saves it the ALGORITHMS/saved directory"""
-		#function [model] = createModel_AsySVD(URM,param)
+		#function [model] = createModel_ALGORITHM_NAME(URM,ICM,param)
 		if not urm:
 			urm = self.create_urm()
 		if not icm:
@@ -103,7 +103,7 @@ class Whisperer(object):
 	@matlab		
 	def _get_rec(self, algname, user, **param):
 		"""Return a recommendation using the matlab engine"""
-		#function [recomList] = onLineRecom_AsySVD (userProfile, model,param)
+		#function [recomList] = onLineRecom_ALGORITHM_NAME (userProfile, model,param)
 		up = self.create_userprofile(user)
 		alg = self._get_model_name(algname)
 		self._put('up', up)
